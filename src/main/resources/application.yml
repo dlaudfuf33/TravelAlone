@@ -1,6 +1,5 @@
 server:
   port: 8080
-
 spring:
   output:
     ansi:
@@ -26,3 +25,6 @@ spring:
     store-type: jdbc
   thymeleaf:
     cache: false
+jwt:
+  secret: 1q2w3e
+  expiration: 3600  # 1시간 (단위: 초)
