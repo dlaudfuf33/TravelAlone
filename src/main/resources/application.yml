@@ -28,3 +28,11 @@ spring:
 jwt:
   secret: 1q2w3e
   expiration: 3600  # 1시간 (단위: 초)
+
+  springdoc:
+    version: 1.6.9
+    api-docs:
+      path: /api-docs
+    swagger-ui:
+      path: /swagger-ui.html
+      configUrl: /api-docs/swagger-config

@@ -17,7 +17,7 @@ function PostCreateView({ onPostAdded }) {
     };
 
     axios
-      .post("/api/posts", postData)
+      .post("/api/posts/create", postData)
       .then((response) => {
         alert("게시물이 성공적으로 작성되었습니다.");
         // 페이지 이동

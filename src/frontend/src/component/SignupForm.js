@@ -34,11 +34,12 @@ function SignupForm() {
     e.preventDefault();
     try {
       // 회원가입 데이터를 서버로 전송
-      const response = await axios.post("/api/signup", formData);
+      const response = await axios.post("/api/users/signup", formData);
   
       if (response.data === "가입 successfully!") {
         // 회원가입 성공시 로그 메시지 출력 및 상태 변경
         console.log("회원가입 성공:", response.data);
+        alert("회원가입 성공");
         setIsSignupSuccess(true);
         navigate("/"); // 성공 후 원하는 경로로 이동
       } else {
@@ -74,7 +75,7 @@ function SignupForm() {
         <label>사용자 아이디:</label>
         <input
           type="text"
-          name="login_id"
+          name="username"
           value={formData.username}
           onChange={handleChange}
         />

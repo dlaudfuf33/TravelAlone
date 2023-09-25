@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .configurationSource(corsConfigurationSource())  // CORS 설정을 가져옴
                 .and()
                 .authorizeRequests()
-                .antMatchers("/public/**", "/api/*").permitAll() // "/api/signup" 추가
+                .antMatchers("/public/**", "/api/**").permitAll() // "/api/signup" 추가
                 .antMatchers("/admin/**").hasRole("ADMIN")  // /admin/** 경로는 ADMIN 역할을 가진 사용자만 접근 허용
                 .antMatchers("/**").permitAll() // 모든 경로에 대한 접근을 허용 (개발 중일 때만 사용하길 권장)
                 .anyRequest().authenticated()  // 위에 정의되지 않은 나머지 요청은 인증된 사용자만 접근 가능

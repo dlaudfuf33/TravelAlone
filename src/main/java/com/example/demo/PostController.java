@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ public class PostController {
     @Autowired
     private PostService postService;
     // 모든 게시물 목록을 가져오는 엔드포인트
+    @Operation(summary = "모든 게시물을 조회합니다.")
     @GetMapping
     public ResponseEntity<List<Post>> getAllPosts() {
         try {
@@ -29,7 +31,7 @@ public class PostController {
     }
 
     // 특정 ID의 게시물을 가져오는 엔드포인트
-//    @CrossOrigin(origins = "http://localhost:3000")
+    @Operation(summary = "특정 ID의 게시물을 조회합니다.")
     @GetMapping("/list/{id}")
     public ResponseEntity<Post> getPostById(@PathVariable Long id) {
         try {
@@ -50,6 +52,7 @@ public class PostController {
     }
 
     // 새로운 게시물을 생성하는 엔드포인트
+    @Operation(summary = "새로운 게시물을 생성합니다.")
     @PostMapping("/create")
     public ResponseEntity<Post> createPost(@RequestBody Post post) {
         try {
@@ -64,6 +67,7 @@ public class PostController {
     }
 
     // 특정 ID의 게시물을 업데이트하는 엔드포인트
+    @Operation(summary = "특정 ID의 게시물을 업데이트합니다.")
     @PutMapping("/view/{id}")
     public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody Post post) {
         try {
@@ -81,6 +85,7 @@ public class PostController {
     }
 
     // 특정 ID의 게시물을 삭제하는 엔드포인트
+    @Operation(summary = "특정 ID의 게시물을 삭제합니다.")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         try {
