@@ -12,7 +12,7 @@ public class UserRequest {
     private LocalDate dateOfBirth;
     private String gender;
     private String introduction;
-    // 다른 필드도 추가할 수 있습니다.
+    // 다른 필드도 추가할 수 있습니다.ss
 
     // 게터와 세터 메서드
 

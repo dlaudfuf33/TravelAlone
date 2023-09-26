@@ -45,6 +45,7 @@
     "prettier": "2.8.3",
     "typescript": "*"
   },
+
   "resolutions": {
     "@types/react": "17.0.2"
   }
