@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 //@CrossOrigin(origins = "http://localhost:3000")
+@Tag(name = "POSTS API", description = "게시판(Posts) 관련 API 엔드포인트")
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
@@ -30,6 +32,22 @@ public class PostController {
         }
     }
 
+
+    // 새로운 게시물을 생성하는 엔드포인트
+    @Operation(summary = "새로운 게시물을 생성합니다.")
+    @PostMapping("/create")
+    public ResponseEntity<Post> createPost(@RequestBody Post post) {
+        try {
+            Post createdPost = postService.createPost(post);
+            System.out.println("게시물 생성: ID " + createdPost.getId() + "의 게시물이 생성됨");
+            return ResponseEntity.ok(createdPost);
+        } catch (Exception e) {
+            System.err.println("게시물 생성 중 오류 발생: " + e.getMessage());
+            // 예외 발생 시 500 Internal Server Error를 반환
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     // 특정 ID의 게시물을 가져오는 엔드포인트
     @Operation(summary = "특정 ID의 게시물을 조회합니다.")
     @GetMapping("/list/{id}")
@@ -46,21 +64,6 @@ public class PostController {
             }
         } catch (Exception e) {
             System.err.println("게시물 조회 중 오류 발생: " + e.getMessage());
-            // 예외 발생 시 500 Internal Server Error를 반환
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    // 새로운 게시물을 생성하는 엔드포인트
-    @Operation(summary = "새로운 게시물을 생성합니다.")
-    @PostMapping("/create")
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        try {
-            Post createdPost = postService.createPost(post);
-            System.out.println("게시물 생성: ID " + createdPost.getId() + "의 게시물이 생성됨");
-            return ResponseEntity.ok(createdPost);
-        } catch (Exception e) {
-            System.err.println("게시물 생성 중 오류 발생: " + e.getMessage());
             // 예외 발생 시 500 Internal Server Error를 반환
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

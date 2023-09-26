@@ -22,13 +22,13 @@ public class RoleController {
     }
 
     @Operation(summary = "새로운 역할을 생성합니다.")
-    @PostMapping
+    @PostMapping("/create")
     public Role createRole(@RequestBody String roleName) {
         return roleService.createRole(roleName);
     }
 
     @Operation(summary = "특정 ID의 역할을  조회합니다.")
-    @GetMapping("/{roleName}")
+    @GetMapping("/read/{roleName}")
     public ResponseEntity<Role> getRoleByName(@PathVariable String roleName) {
         Role role = roleService.getRoleByName(roleName);
         if (role != null) {
@@ -38,7 +38,7 @@ public class RoleController {
         }
     }
     @Operation(summary = "특정 ID의 역할을 업데이트 합니다.")
-    @PutMapping("/{roleId}")
+    @PutMapping("/update/{roleId}")
     public ResponseEntity<Role> updateRole(@PathVariable Long roleId, @RequestBody Role updatedRole) {
         Role role = roleService.updateRole(roleId, updatedRole);
         if (role != null) {
@@ -48,7 +48,7 @@ public class RoleController {
         }
     }
     @Operation(summary = "특정 ID의 역할을 삭제합니다.")
-    @DeleteMapping("/{roleId}")
+    @DeleteMapping("/delete/{roleId}")
     public ResponseEntity<?> deleteRole(@PathVariable Long roleId) {
         boolean deleted = roleService.deleteRole(roleId);
         if (deleted) {
