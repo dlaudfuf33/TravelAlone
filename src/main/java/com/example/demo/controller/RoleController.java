@@ -1,4 +1,6 @@
-package com.example.demo;// RoleController.java
+package com.example.demo.controller;// RoleController.java
+import com.example.demo.entity.Role;
+import com.example.demo.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

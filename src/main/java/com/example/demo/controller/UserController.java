@@ -1,5 +1,9 @@
-package com.example.demo;
+package com.example.demo.controller;
 
+import com.example.demo.*;
+import com.example.demo.entity.User;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -26,6 +31,8 @@ public class UserController {
     @Operation(summary = "사용자 가입을 위한 엔드포인트")
     @PostMapping("/signup")
     public String signup(@RequestBody UserRequest userRequest) {
+        System.out.println(userRequest);
+        LocalDateTime currentTime = LocalDateTime.now();
         // 사용자 입력값 유효성 검사
         if (userRequest.getUsername() == null || userRequest.getUsername().isEmpty()) {
             return "사용자 이름은 필수 입력 항목입니다.";
@@ -52,6 +59,11 @@ public class UserController {
         user.setPassword(hashedPassword);
         user.setEmail(userRequest.getEmail());
         user.setSalt(salt); // 생성한 소금 저장
+        user.setDateOfBirth(userRequest.getDateOfBirth());
+        user.setNickname(userRequest.getNickname());
+        user.setGender(userRequest.getGender());
+        user.setIntroduction(userRequest.getIntroduction());
+        user.setRegistrationDate(currentTime);
 
         // UserRepository를 사용하여 사용자 정보를 저장
         userRepository.save(user);

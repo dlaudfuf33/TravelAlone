@@ -1,8 +1,9 @@
-package com.example.demo;
+package com.example.demo.service;
 
+import com.example.demo.entity.Role;
+import com.example.demo.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 

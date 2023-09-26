@@ -1,15 +1,13 @@
-package com.example.demo;
+package com.example.demo.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "댓글 정보")
 @Entity
-@Table(name = "posts")
+@Table(name = "comments")
 public class Comment {
 
     @Id

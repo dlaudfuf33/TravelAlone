@@ -1,5 +1,8 @@
 package com.example.demo;
 
+import com.example.demo.entity.Post;
+import com.example.demo.repository.PostRepository;
+import com.example.demo.service.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

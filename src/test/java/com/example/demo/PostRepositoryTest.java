@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import com.example.demo.entity.Post;
+import com.example.demo.repository.PostRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
