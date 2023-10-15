@@ -26,6 +26,8 @@ public class Comment {
 
     @Column
     private Timestamp createdAt;
+    @Column
+    private Timestamp updateAt;
 
     @Column(precision = 3, scale = 2)
     private Double rating;

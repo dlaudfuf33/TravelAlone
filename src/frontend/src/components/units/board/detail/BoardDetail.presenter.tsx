@@ -11,30 +11,25 @@ export default function BoardDetailUI(props: IBoardDetailUIProps): JSX.Element {
           <S.AvatarWrapper>
             <S.Avatar src="/images/avatar.png" />
             <S.Info>
-              <S.Writer>{props.data?.fetchBoard?.writer}</S.Writer>
-              <S.CreatedAt>
-                {getDate(props.data?.fetchBoard?.createdAt)}
-              </S.CreatedAt>
+              <S.Writer>{props.data?.author}</S.Writer> {/* 작성자 정보 */}
+              <S.CreatedAt>{getDate(props.data?.createdAt)}</S.CreatedAt> {/* 작성일 정보 */}
             </S.Info>
           </S.AvatarWrapper>
           <S.IconWrapper>
             <S.LinkIcon src="/images/board/detail/link.png" />
-            <Tooltip
-              placement="topRight"
-              title={`${props.data?.fetchBoard.boardAddress?.address ?? ""} ${
-                props.data?.fetchBoard.boardAddress?.addressDetail ?? ""
-              }`}
-            >
+            <Tooltip>
               <S.LocationIcon src="/images/board/detail/location.png" />
             </Tooltip>
           </S.IconWrapper>
         </S.Header>
         <S.Body>
-          <S.Title>{props.data?.fetchBoard?.title}</S.Title>
-          <S.Contents>{props.data?.fetchBoard?.contents}</S.Contents>
-          {props.data?.fetchBoard.youtubeUrl !== "" && (
+          <S.Title>{props.data?.title}</S.Title> {/* 제목 정보 */}
+          <S.Contents dangerouslySetInnerHTML={{ __html: props.data?.contents || '' }}></S.Contents>
+
+
+          {props.data?.youtubeUrl !== "" && (
             <S.Youtube
-              url={props.data?.fetchBoard.youtubeUrl ?? ""}
+              url={props.data?.youtubeUrl ?? ""}
               width="486px"
               height="240px"
             />

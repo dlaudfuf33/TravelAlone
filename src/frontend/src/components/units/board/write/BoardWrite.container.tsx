@@ -1,259 +1,140 @@
-import { useState } from "react";
-import type { ChangeEvent } from "react";
-import { useMutation } from "@apollo/client";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
+import axios from 'axios';
 import BoardWriteUI from "./BoardWrite.presenter";
-import { CREATE_BOARD, UPDATE_BOARD } from "./BoardWrite.queries";
-import type {
-  IMutation,
-  IMutationCreateBoardArgs,
-  IMutationUpdateBoardArgs,
-  IUpdateBoardInput,
-} from "../../../../commons/types/generated/types";
-import type { IBoardWriteProps } from "./BoardWrite.types";
-import type { Address } from "react-daum-postcode";
+// import ReactQuill from 'react-quill';
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css'; // Quill의 스타일 시트를 추가해줍니다.
 
-export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
+
+// 동적 임포트를 사용하여 ReactQuill을 클라이언트 사이드에서만 불러오기
+const ReactQuill = dynamic(
+  () => import('react-quill'),
+  { ssr: false }  // 이를 클라이언트 사이드에서만 불러오도록 설정
+);
+
+export default function BoardWrite() {
   const router = useRouter();
-  const [isActive, setIsActive] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    author: "",
+    password: "",
+    title: "",
+    contents: "",
+    youtubeUrl: "",
+    files: [] as File[], // 파일 업로드를 위한 배열
+  });
 
-  const [writer, setWriter] = useState("");
-  const [password, setPassword] = useState("");
-  const [title, setTitle] = useState("");
-  const [contents, setContents] = useState("");
-  const [youtubeUrl, setYoutubeUrl] = useState("");
-  const [zipcode, setZipcode] = useState("");
-  const [address, setAddress] = useState("");
-  const [addressDetail, setAddressDetail] = useState("");
+  const [errors, setErrors] = useState({
+    authorError: "",
+    passwordError: "",
+    titleError: "",
+    contentsError: "",
+  });
 
-  const [writerError, setWriterError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [titleError, setTitleError] = useState("");
-  const [contentsError, setContentsError] = useState("");
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, files } = e.target;
 
-  const [createBoard] = useMutation<
-    Pick<IMutation, "createBoard">,
-    IMutationCreateBoardArgs
-  >(CREATE_BOARD);
-  const [updateBoard] = useMutation<
-    Pick<IMutation, "updateBoard">,
-    IMutationUpdateBoardArgs
-  >(UPDATE_BOARD);
+    if (type === 'file') {
+      const newFiles = files ? Array.from(files) as File[] : []; // 파일 배열 복사
 
-  const onChangeWriter = (event: ChangeEvent<HTMLInputElement>): void => {
-    setWriter(event.target.value);
-    if (event.target.value !== "") {
-      setWriterError("");
-    }
-
-    if (
-      event.target.value !== "" &&
-      password !== "" &&
-      title !== "" &&
-      contents !== ""
-    ) {
-      setIsActive(true);
+      setFormData({
+        ...formData,
+        files: newFiles,
+      });
     } else {
-      setIsActive(false);
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
     }
   };
 
-  const onChangePassword = (event: ChangeEvent<HTMLInputElement>): void => {
-    setPassword(event.target.value);
-    if (event.target.value !== "") {
-      setPasswordError("");
+  const validateForm = () => {
+    let isValid = true;
+    let newErrors = {
+      authorError: "",
+      passwordError: "",
+      titleError: "",
+      contentsError: "",
+    };
+
+    if (!formData.author) {
+      isValid = false;
+      newErrors.authorError = "작성자를 입력해주세요.";
+    }
+    if (!formData.password) {
+      isValid = false;
+      newErrors.passwordError = "비밀번호를 입력해주세요.";
+    }
+    if (!formData.title) {
+      isValid = false;
+      newErrors.titleError = "제목을 입력해주세요.";
+    }
+    if (!formData.contents) {
+      isValid = false;
+      newErrors.contentsError = "내용을 입력해주세요.";
     }
 
-    if (
-      writer !== "" &&
-      event.target.value !== "" &&
-      title !== "" &&
-      contents !== ""
-    ) {
-      setIsActive(true);
-    } else {
-      setIsActive(false);
-    }
+    setErrors(newErrors);
+    return isValid;
   };
 
-  const onChangeTitle = (event: ChangeEvent<HTMLInputElement>): void => {
-    setTitle(event.target.value);
-    if (event.target.value !== "") {
-      setTitleError("");
-    }
-
-    if (
-      writer !== "" &&
-      password !== "" &&
-      event.target.value !== "" &&
-      contents !== ""
-    ) {
-      setIsActive(true);
-    } else {
-      setIsActive(false);
-    }
+  // Quill 에디터 내용 변경 시 실행될 콜백 함수
+  const handleQuillChange = (value) => {
+    // Quill 에디터 내용 업데이트
+    setFormData((prevData) => ({
+      ...prevData,
+      contents: value,
+    }));
   };
 
-  const onChangeContents = (event: ChangeEvent<HTMLTextAreaElement>): void => {
-    setContents(event.target.value);
-    if (event.target.value !== "") {
-      setContentsError("");
-    }
 
-    if (
-      writer !== "" &&
-      password !== "" &&
-      title !== "" &&
-      event.target.value !== ""
-    ) {
-      setIsActive(true);
-    } else {
-      setIsActive(false);
-    }
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const onChangeYoutubeUrl = (event: ChangeEvent<HTMLInputElement>): void => {
-    setYoutubeUrl(event.target.value);
-  };
-
-  const onChangeAddressDetail = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void => {
-    setAddressDetail(event.target.value);
-  };
-
-  const onClickAddressSearch = (): void => {
-    setIsOpen((prev) => !prev);
-  };
-
-  const onCompleteAddressSearch = (data: Address): void => {
-    setAddress(data.address);
-    setZipcode(data.zonecode);
-    setIsOpen((prev) => !prev);
-  };
-
-  const onClickSubmit = async (): Promise<void> => {
-    if (writer === "") {
-      setWriterError("작성자를 입력해주세요.");
-    }
-    if (password === "") {
-      setPasswordError("비밀번호를 입력해주세요.");
-    }
-    if (title === "") {
-      setTitleError("제목을 입력해주세요.");
-    }
-    if (contents === "") {
-      setContentsError("내용을 입력해주세요.");
-    }
-    if (writer !== "" && password !== "" && title !== "" && contents !== "") {
-      try {
-        const result = await createBoard({
-          variables: {
-            createBoardInput: {
-              writer,
-              password,
-              title,
-              contents,
-              youtubeUrl,
-              boardAddress: {
-                zipcode,
-                address,
-                addressDetail,
-              },
-            },
-          },
-        });
-
-        console.log(result.data?.createBoard._id);
-        if (result.data?.createBoard._id === undefined) {
-          alert("요청에 문제가 있습니다.");
-          return;
-        }
-
-        void router.push(`/boards/${result.data?.createBoard._id}`);
-      } catch (error) {
-        if (error instanceof Error) alert(error.message);
-      }
-    }
-  };
-
-  const onClickUpdate = async (): Promise<void> => {
-    if (
-      title === "" &&
-      contents === "" &&
-      youtubeUrl === "" &&
-      address === "" &&
-      addressDetail === "" &&
-      zipcode === ""
-    ) {
-      alert("수정한 내용이 없습니다.");
+    if (!validateForm()) {
       return;
     }
 
-    if (password === "") {
-      alert("비밀번호를 입력해주세요.");
-      return;
-    }
+    const formDataForRequest = new FormData();
 
-    const updateBoardInput: IUpdateBoardInput = {};
-    if (title !== "") updateBoardInput.title = title;
-    if (contents !== "") updateBoardInput.contents = contents;
-    if (youtubeUrl !== "") updateBoardInput.youtubeUrl = youtubeUrl;
-    if (zipcode !== "" || address !== "" || addressDetail !== "") {
-      updateBoardInput.boardAddress = {};
-      if (zipcode !== "") updateBoardInput.boardAddress.zipcode = zipcode;
-      if (address !== "") updateBoardInput.boardAddress.address = address;
-      if (addressDetail !== "")
-        updateBoardInput.boardAddress.addressDetail = addressDetail;
-    }
+    // Quill 에디터에서 생성된 HTML 내용을 추가
+    formDataForRequest.append("contents", formData.contents);
+
+    // "post" 파트에는 파일을 제외한 다른 데이터를 JSON 문자열로 변환하여 추가
+    // 여기서 files 필드를 제외합니다.
+    const { files, ...restOfData } = formData;
+    formDataForRequest.append("post", JSON.stringify(restOfData));
+
+    // 각 파일을 "files" 키로 추가
+    files && files.forEach((file, index) => {
+      formDataForRequest.append(`files`, file); // 인덱스를 키에 포함
+    });
 
     try {
-      if (typeof router.query.boardId !== "string") {
-        alert("시스템에 문제가 있습니다.");
-        return;
-      }
-      const result = await updateBoard({
-        variables: {
-          boardId: router.query.boardId,
-          password,
-          updateBoardInput,
+      const response = await axios.post('http://localhost:8080/api/posts/create', formDataForRequest, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // 파일 업로드 시 Content-Type 설정
         },
       });
 
-      if (result.data?.updateBoard._id === undefined) {
-        alert("요청에 문제가 있습니다.");
-        return;
-      }
-
-      void router.push(`/boards/${result.data?.updateBoard._id}`);
+      if (response.data.id) {
+        alert("게시글이 성공적으로 등록되었습니다.");
+        router.push(`/boards/${response.data.id}`);
+      } else alert("게시글 등록에 실패하였습니다.");
     } catch (error) {
-      if (error instanceof Error) alert(error.message);
+      alert("오류가 발생했습니다. 다시 시도해주세요.");
     }
-  };
-
+  }
   return (
-    <BoardWriteUI
-      writerError={writerError}
-      passwordError={passwordError}
-      titleError={titleError}
-      contentsError={contentsError}
-      onChangeWriter={onChangeWriter}
-      onChangePassword={onChangePassword}
-      onChangeTitle={onChangeTitle}
-      onChangeContents={onChangeContents}
-      onChangeYoutubeUrl={onChangeYoutubeUrl}
-      onChangeAddressDetail={onChangeAddressDetail}
-      onClickAddressSearch={onClickAddressSearch}
-      onCompleteAddressSearch={onCompleteAddressSearch}
-      onClickSubmit={onClickSubmit}
-      onClickUpdate={onClickUpdate}
-      isActive={isActive}
-      isEdit={props.isEdit}
-      data={props.data}
-      isOpen={isOpen}
-      zipcode={zipcode}
-      address={address}
-    />
+    <div>
+      <BoardWriteUI
+        formData={formData}
+        errors={errors}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        handleEditorChange={handleQuillChange} // 이 부분 추가
+      />
+    </div>
   );
 }

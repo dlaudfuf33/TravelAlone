@@ -1,10 +1,13 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Comment;
+import com.example.demo.entity.Post;
 import com.example.demo.repository.CommentRepository;
+import com.example.demo.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 /**
@@ -15,6 +18,8 @@ public class CommentService {
 
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private PostRepository postRepository;
 
     /**
      * 모든 댓글 목록을 가져옵니다.
@@ -34,6 +39,12 @@ public class CommentService {
     public Comment createComment(Comment comment) {
         return commentRepository.save(comment);
     }
+
+//    public Comment createCommentForPost(Long postId, Comment comment) {
+//        Post post = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("Post not found"));
+//        comment.setPost(post);
+//        return commentRepository.save(comment);
+//    }
 
 
     /**

@@ -1,88 +1,90 @@
+import React from "react";
 import * as S from "./BoardWrite.styles";
 import type { IBoardWriteUIProps } from "./BoardWrite.types";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // Quill의 스타일 시트를 추가해줍니다.
+// import MyQuillEditor from '../../../CustomEditor/MyQuillEditor';
+import dynamic from 'next/dynamic';
+const MyQuillEditor = dynamic(
+  () => import('../../../CustomEditor/MyQuillEditor'),
+  { ssr: false }
+);
+export default function BoardWriteUI({
+  formData, errors, handleChange, handleSubmit, handleEditorChange
+}: IBoardWriteUIProps): JSX.Element {
 
-export default function BoardWriteUI(props: IBoardWriteUIProps): JSX.Element {
   return (
-    <>
-      {props.isOpen && (
-        <S.AddressModal visible={true}>
-          <S.AddressSearchInput onComplete={props.onCompleteAddressSearch} />
-        </S.AddressModal>
-      )}
-      <S.Wrapper>
-        <S.Title>{props.isEdit ? "게시글 수정" : "게시글 등록"}</S.Title>
-        <S.WriterWrapper>
-          <S.InputWrapper>
-            <S.Label>작성자</S.Label>
-            <S.Writer
-              type="text"
-              placeholder="이름을 적어주세요."
-              onChange={props.onChangeWriter}
-              defaultValue={props.data?.fetchBoard.writer ?? ""}
-              readOnly={Boolean(props.data?.fetchBoard.writer)}
-            />
-            <S.Error>{props.writerError}</S.Error>
-          </S.InputWrapper>
-          <S.InputWrapper>
-            <S.Label>비밀번호</S.Label>
-            <S.Password
-              type="password"
-              placeholder="비밀번호를 작성해주세요."
-              onChange={props.onChangePassword}
-            />
-            <S.Error>{props.passwordError}</S.Error>
-          </S.InputWrapper>
-        </S.WriterWrapper>
+    <S.Wrapper>
+      <S.Title>게시글 등록</S.Title>
+      <form onSubmit={handleSubmit}>
+        <S.InputWrapper>
+          <S.Label>작성자</S.Label>
+          <S.Writer
+            type="text"
+            name="author"
+            placeholder="이름을 적어주세요."
+            value={formData.author}
+            onChange={handleChange}
+          />
+          <S.Error>{errors.authorError}</S.Error>
+        </S.InputWrapper>
+        <S.InputWrapper>
+          <S.Label>비밀번호</S.Label>
+          <S.Password
+            type="password"
+            name="password"
+            placeholder="비밀번호를 작성해주세요."
+            value={formData.password}
+            onChange={handleChange}
+          />
+          <S.Error>{errors.passwordError}</S.Error>
+        </S.InputWrapper>
         <S.InputWrapper>
           <S.Label>제목</S.Label>
           <S.Subject
             type="text"
+            name="title"
             placeholder="제목을 작성해주세요."
-            onChange={props.onChangeTitle}
-            defaultValue={props.data?.fetchBoard.title}
+            value={formData.title}
+            onChange={handleChange}
           />
-          <S.Error>{props.titleError}</S.Error>
+          <S.Error>{errors.titleError}</S.Error>
         </S.InputWrapper>
         <S.InputWrapper>
           <S.Label>내용</S.Label>
-          <S.Contents
+          {/* <S.Contents
+            name="contents"
             placeholder="내용을 작성해주세요."
-            onChange={props.onChangeContents}
-            defaultValue={props.data?.fetchBoard.contents}
-          />
-          <S.Error>{props.contentsError}</S.Error>
+            value={formData.contents}
+            onChange={handleChange}
+            /> */}
+          <MyQuillEditor onChange={handleEditorChange} value={formData.contents} />
+          <S.Error>{errors.contentsError}</S.Error>
         </S.InputWrapper>
-        <S.InputWrapper></S.InputWrapper>
         <S.InputWrapper>
           <S.Label>유튜브</S.Label>
           <S.Youtube
+            type="text"
+            name="youtubeUrl"
             placeholder="링크를 복사해주세요."
-            onChange={props.onChangeYoutubeUrl}
-            defaultValue={props.data?.fetchBoard.youtubeUrl ?? ""}
+            value={formData.youtubeUrl}
+            onChange={handleChange}
           />
         </S.InputWrapper>
-        <S.ImageWrapper>
-          <S.Label>사진첨부</S.Label>
-          <S.UploadButton>+</S.UploadButton>
-          <S.UploadButton>+</S.UploadButton>
-          <S.UploadButton>+</S.UploadButton>
-        </S.ImageWrapper>
-        <S.OptionWrapper>
-          <S.Label>메인설정</S.Label>
-          <S.RadioButton type="radio" id="youtube" name="radio-button" />
-          <S.RadioLabel htmlFor="youtube">유튜브</S.RadioLabel>
-          <S.RadioButton type="radio" id="image" name="radio-button" />
-          <S.RadioLabel htmlFor="image">사진</S.RadioLabel>
-        </S.OptionWrapper>
+        <S.InputWrapper>
+          <S.Label>파일 업로드</S.Label>
+          <S.FileUpload
+            type="file"
+            name="file"
+            onChange={handleChange} // 파일 선택 시 handleChange 호출
+          />
+        </S.InputWrapper>
         <S.ButtonWrapper>
-          <S.SubmitButton
-            onClick={props.isEdit ? props.onClickUpdate : props.onClickSubmit}
-            isActive={props.isEdit ? true : props.isActive}
-          >
-            {props.isEdit ? "수정하기" : "등록하기"}
+          <S.SubmitButton type="submit">
+            등록하기
           </S.SubmitButton>
         </S.ButtonWrapper>
-      </S.Wrapper>
-    </>
+      </form>
+    </S.Wrapper>
   );
 }

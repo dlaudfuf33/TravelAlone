@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["quill-image-resize-module", "quill-video-resize-module"],
     "target": "es5",
     "lib": [
       "dom",

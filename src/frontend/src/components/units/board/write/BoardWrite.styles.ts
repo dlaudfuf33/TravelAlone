@@ -112,6 +112,9 @@ export const ImageWrapper = styled.div`
   width: 996px;
   padding-top: 40px;
 `;
+export const FileUpload = styled.input`
+  /* 스타일 속성들 */
+`;
 
 export const UploadButton = styled.button`
   width: 78px;
@@ -177,6 +180,7 @@ export const Error = styled.div`
   font-size: 14px;
   color: red;
 `;
+
 
 export const AddressModal = styled(Modal)``;
 

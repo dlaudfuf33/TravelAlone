@@ -16,16 +16,16 @@ export default function BoardList(): JSX.Element {
     axios.get('http://localhost:8080/api/posts')
       .then(response => {
         // 디버깅을 위한 로그: API 호출이 성공했을 때의 응답 확인
-        console.log("axios 호출 성공 시 응답 확인:", response.data); 
+        console.log("axios 호출 성공 시 응답 확인:", response.data);
 
         // 받아온 데이터를 상태에 저장
         setData({ fetchBoards: response.data });
 
         // 디버깅을 위한 로그: setData 함수가 제대로 호출되었는지와 데이터 확인
-        console.log("setData 호출 확인:", { fetchBoards: response.data }); 
-        
+        console.log("setData 호출 확인:", { fetchBoards: response.data });
+
         // 정상적으로 데이터를 가져왔음을 사용자에게 알림
-        alert("정상호출 완료");
+        // alert("정상호출 완료");
       })
       .catch(error => {
         // 오류 발생 시 콘솔에 오류 메시지 출력

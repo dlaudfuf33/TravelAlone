@@ -1,6 +1,10 @@
 server:
   port: 8080
 spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
   output:
     ansi:
       enabled: always
@@ -36,3 +40,16 @@ jwt:
     swagger-ui:
       path: /swagger-ui.html
       configUrl: /api-docs/swagger-config
+
+cloud:
+  aws:
+    s3:
+      bucket: forlivealone
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}

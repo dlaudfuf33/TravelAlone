@@ -1,13 +1,13 @@
 import type { ChangeEvent } from "react";
-import type { IQuery } from "../../../../commons/types/generated/types";
+import type { Post } from "../../../../commons/types/generated/types.rest";
 
 export interface IBoardWriteProps {
   isEdit: boolean;
-  data?: Pick<IQuery, "fetchBoard">;
+  data?: Post;
 }
 
 export interface IBoardWriteUIProps {
-  writerError: string;
+  authorError: string;
   passwordError: string;
   titleError: string;
   contentsError: string;
@@ -16,6 +16,7 @@ export interface IBoardWriteUIProps {
   onChangeTitle: (event: ChangeEvent<HTMLInputElement>) => void;
   onChangeContents: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   onChangeYoutubeUrl: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleEditorChange: (value: string) => void; // 이 부분 추가
   onChangeAddressDetail: (event: ChangeEvent<HTMLInputElement>) => void;
   onClickAddressSearch: () => void;
   onCompleteAddressSearch: (data: any) => void;
@@ -23,7 +24,7 @@ export interface IBoardWriteUIProps {
   onClickUpdate: () => void;
   isActive: boolean;
   isEdit: boolean;
-  data?: Pick<IQuery, "fetchBoard">;
+  data?: Post;
   isOpen: boolean;
   zipcode: string;
   address: string;

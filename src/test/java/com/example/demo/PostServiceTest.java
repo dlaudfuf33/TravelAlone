@@ -27,7 +27,7 @@ public class PostServiceTest {
     public void setUp() {
         Post post = new Post();
         post.setTitle("Test Title");
-        post.setContent("Test Content");
+        post.setContents("Test Content");
         post.setAuthor("Test Author");
 
         when(postRepository.findById(1L)).thenReturn(Optional.of(post));
@@ -45,7 +45,7 @@ public class PostServiceTest {
     public void testCreatePost() {
         Post post = new Post();
         post.setTitle("New Title");
-        post.setContent("New Content");
+        post.setContents("New Content");
         post.setAuthor("New Author");
 
         Post savedPost = postService.createPost(post);

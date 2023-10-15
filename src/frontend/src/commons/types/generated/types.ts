@@ -1,3 +1,5 @@
+import React, { ReactNode } from 'react';
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -23,12 +25,33 @@ export type IBoard = {
   createdAt: Scalars['DateTime'];
   updatedAt?: Maybe<Scalars['DateTime']>;
   imageUrl?: Maybe<Scalars['String']>;
-  videoUrl?: Maybe<Scalars['String']>;
+  filesurl?: Maybe<Scalars['String']>
+  fileEntities?: Maybe<Array<{ id: Scalars['ID']; fileUrl: Scalars['String'] }>>;
   youtubeUrl?: Maybe<Scalars['String']>;
   mapLocation?: Maybe<Scalars['String']>;
   votes?: Maybe<Scalars['String']>;
   averageRating?: Maybe<Scalars['Float']>;
 };
+
+export interface IBoardWriteUIProps {
+  formData: {
+    author: string;
+    password: string;
+    title: string;
+    contents: string;
+    youtubeUrl: string;
+    files: never[];
+  };
+  errors: {
+    authorError: string;
+    passwordError: string;
+    titleError: string;
+    contentsError: string;
+  };
+  handleChange: (e: any) => void;
+  handleSubmit: (e: any) => Promise<void>;
+  children: ReactNode; // children 추가
+}
 
 export type IBoardAddress = {
   __typename?: 'BoardAddress';
@@ -56,14 +79,14 @@ export type IBoardComment = {
   rating: Scalars['Float'];
   updatedAt: Scalars['DateTime'];
   user?: Maybe<IUser>;
-  writer?: Maybe<Scalars['String']>;
+  author?: Maybe<Scalars['String']>;
 };
 
 export type ICreateBoardCommentInput = {
   contents: Scalars['String'];
   password?: InputMaybe<Scalars['String']>;
   rating: Scalars['Float'];
-  writer?: InputMaybe<Scalars['String']>;
+  author?: InputMaybe<Scalars['String']>;
 };
 
 export type ICreateBoardInput = {
@@ -72,7 +95,7 @@ export type ICreateBoardInput = {
   images?: InputMaybe<Array<Scalars['String']>>;
   password?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
-  writer?: InputMaybe<Scalars['String']>;
+  author?: InputMaybe<Scalars['String']>;
   youtubeUrl?: InputMaybe<Scalars['String']>;
 };
 

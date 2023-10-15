@@ -4,6 +4,7 @@ import { Global } from "@emotion/react";
 import { globalStyles } from "../src/commons/styles/globalStyles";
 import ApolloSetting from "../src/components/commons/apollo";
 import Layout from "../src/components/commons/layout";
+import '../src/components/CustomEditor/MyQuillEditor.css';
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
   return (

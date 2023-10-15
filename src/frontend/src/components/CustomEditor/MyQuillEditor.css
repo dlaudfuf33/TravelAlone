@@ -1,0 +1,8 @@
+/* MyQuillEditor.css */
+.quill-editor {
+  width: 996px;
+  height: 480px;
+  padding-left: 16px;
+  padding: 14px;
+  border: 1px solid #bdbdbd;
+}

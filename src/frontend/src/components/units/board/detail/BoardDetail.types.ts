@@ -1,6 +1,6 @@
-import type { IQuery } from "../../../../commons/types/generated/types";
+import type { Post } from "../../../../commons/types/generated/types.rest";
 
 export interface IBoardDetailUIProps {
-  data?: Pick<IQuery, "fetchBoard">;
+  data?: Post;
   onClickMoveToBoardEdit: () => void;
 }

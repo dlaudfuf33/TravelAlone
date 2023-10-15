@@ -44,7 +44,7 @@ public class PostControllerTest {
             // Post 객체의 필드를 설정한다.
             // 여기서 i 값을 이용하여 각 필드의 값이 서로 다르게 설정된다.
             post.setTitle("Test Title " + i);
-            post.setContent("Test Content " + i);
+            post.setContents("Test Content " + i);
             post.setAuthor("Test Author " + i);
 
             // 생성 시간과 수정 시간을 현재 시간으로 설정한다.

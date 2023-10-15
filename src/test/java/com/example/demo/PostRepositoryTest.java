@@ -21,7 +21,7 @@ public class PostRepositoryTest {
     public void testConnection() {
         Post post = new Post();
         post.setTitle("Test Title");
-        post.setContent("Test Content");
+        post.setContents("Test Content");
         post.setAuthor("Test Author");
 
         Post savedPost = postRepository.save(post);
