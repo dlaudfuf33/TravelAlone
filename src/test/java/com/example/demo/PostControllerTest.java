@@ -57,8 +57,8 @@ public class PostControllerTest {
             if ((i & 0b00001) != 0) post.setYoutubeUrl("Test YouTube URL " + i);
             if ((i & 0b00010) != 0) post.setMapLocation("{\"latitude\": 37.5665, \"longitude\": 126.9780}");
             if ((i & 0b00100) != 0) post.setVotes("{\"upVotes\": 10, \"downVotes\": 5}");
-            if ((i & 0b01000) != 0) post.setImageUrl("Test Image URL " + i);
-            if ((i & 0b10000) != 0) post.setVideoUrl("Test Video URL " + i);
+//            if ((i & 0b01000) != 0) post.setImageUrl("Test Image URL " + i);
+//            if ((i & 0b10000) != 0) post.setVideoUrl("Test Video URL " + i);
 
             // 평균 평점을 설정한다.
             post.setAverageRating(4.5);

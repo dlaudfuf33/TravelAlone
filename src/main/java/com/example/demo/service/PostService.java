@@ -62,7 +62,6 @@ public class PostService {
             if (post != null) {
                 // 게시물과 연관된 파일 정보를 함께 조회
                 List<FileEntity> fileEntities = fileEntityRepository.findByPost(post);
-                System.out.println("여기다여기"+fileEntities);
                 post.setFileEntities(fileEntities);
             }
 

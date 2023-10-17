@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "users") // "users" 테이블과 매핑
@@ -14,27 +17,28 @@ public class User {
     private Long id;
 
     @Column(unique = true)
-    private String username;
+    private String userid;
 
+    @NotBlank(message = "비밀번호는 필수입니다.")
+    @Size(min = 8, message = "비밀번호는 최소 8자 이상이어야 합니다.")
     private String password;
 
     @Column(unique = true)
+//    @Email(message = "유효한 이메일 형식이어야 합니다.")
     private String email;
 
-    private String profileImageUrl; // 프로필 이미지 URL
-
-    @Column(unique = true)
-    private String nickname; // 닉네임
-
+//    @Column(unique = true)
+//    @Size(min = 2, max = 30, message = "닉네임은 2~30자 사이여야 합니다.")
+//    private String nickname; // 닉네임
+    @Column
     private LocalDateTime registrationDate; // 가입일
-
-    private String introduction; // 사용자 소개
-
+    @Column
     private LocalDate dateOfBirth; // 생년월일
-
+    @Column
     private String gender; // 성별
-
+    @Column
     private String salt; // 소금
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
@@ -58,7 +62,7 @@ public class User {
      * @return 사용자 이름
      */
     public String getUsername() {
-        return username;
+        return userid;
     }
 
     /**
@@ -77,21 +81,21 @@ public class User {
         return email;
     }
 
-    /**
-     * 사용자의 프로필 이미지 URL을 반환합니다.
-     * @return 프로필 이미지 URL
-     */
-    public String getProfileImageUrl() {
-        return profileImageUrl;
-    }
-
-    /**
-     * 사용자의 닉네임을 반환합니다.
-     * @return 닉네임
-     */
-    public String getNickname() {
-        return nickname;
-    }
+//    /**
+//     * 사용자의 프로필 이미지 URL을 반환합니다.
+//     * @return 프로필 이미지 URL
+//     */
+//    public String getProfileImageUrl() {
+//        return profileImageUrl;
+//    }
+//
+//    /**
+//     * 사용자의 닉네임을 반환합니다.
+//     * @return 닉네임
+//     */
+//    public String getNickname() {
+//        return nickname;
+//    }
 
     /**
      * 사용자의 가입일을 반환합니다.
@@ -99,14 +103,6 @@ public class User {
      */
     public LocalDateTime getRegistrationDate() {
         return registrationDate;
-    }
-
-    /**
-     * 사용자의 소개를 반환합니다.
-     * @return 사용자 소개
-     */
-    public String getIntroduction() {
-        return introduction;
     }
 
     /**
@@ -141,10 +137,10 @@ public class User {
 
     /**
      * 사용자의 사용자 이름을 설정합니다.
-     * @param username 사용자 이름
+     * @param userid 사용자 이름
      */
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(String userid) {
+        this.userid = userid;
     }
 
     /**
@@ -164,35 +160,11 @@ public class User {
     }
 
     /**
-     * 사용자의 프로필 이미지 URL을 설정합니다.
-     * @param profileImageUrl 프로필 이미지 URL
-     */
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
-    }
-
-    /**
-     * 사용자의 닉네임을 설정합니다.
-     * @param nickname 닉네임
-     */
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    /**
      * 사용자의 가입일을 설정합니다.
      * @param registrationDate 가입일
      */
     public void setRegistrationDate(LocalDateTime registrationDate) {
         this.registrationDate = registrationDate;
-    }
-
-    /**
-     * 사용자의 자기 소개를 설정합니다.
-     * @param introduction 자기 소개
-     */
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction;
     }
 
     /**

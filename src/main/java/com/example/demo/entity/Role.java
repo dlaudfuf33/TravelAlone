@@ -15,6 +15,7 @@ public class Role {
     private String name;
 
     // 다대다 관계로 User 엔티티와 연결
+    @Column
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
