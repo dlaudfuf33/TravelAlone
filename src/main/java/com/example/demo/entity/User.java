@@ -62,7 +62,7 @@ public class User {
      * 사용자 이름을 반환합니다.
      * @return 사용자 이름
      */
-    public String getUsername() {
+    public String getUserid() {
         return userid;
     }
 
@@ -141,7 +141,7 @@ public class User {
      * 사용자의 사용자 이름을 설정합니다.
      * @param userid 사용자 이름
      */
-    public void setUsername(String userid) {
+    public void setUserid(String userid) {
         this.userid = userid;
     }
 

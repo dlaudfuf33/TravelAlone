@@ -34,7 +34,7 @@ public class UserController {
         System.out.println(userRequest);
         LocalDateTime currentTime = LocalDateTime.now();
         // 사용자 입력값 유효성 검사
-        if (userRequest.getUsername() == null || userRequest.getUsername().isEmpty()) {
+        if (userRequest.getUserid() == null || userRequest.getUserid().isEmpty()) {
             return "사용자 이름은 필수 입력 항목입니다.";
         }
 
@@ -55,15 +55,16 @@ public class UserController {
 
         // User 엔티티 생성
         User user = new User();
-        user.setUsername(userRequest.getUsername());
+        user.setUserid(userRequest.getUserid());
         user.setPassword(hashedPassword);
         user.setEmail(userRequest.getEmail());
         user.setSalt(salt); // 생성한 소금 저장
         user.setDateOfBirth(userRequest.getDateOfBirth());
-        user.setNickname(userRequest.getNickname());
         user.setGender(userRequest.getGender());
-        user.setIntroduction(userRequest.getIntroduction());
         user.setRegistrationDate(currentTime);
+        user.setCity(userRequest.getCity());
+        user.setDistrict(userRequest.getDistrict());
+        user.setDetailedAddress(userRequest.getDetailedAddress());
 
         // UserRepository를 사용하여 사용자 정보를 저장
         userRepository.save(user);
