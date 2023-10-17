@@ -8,7 +8,6 @@ import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

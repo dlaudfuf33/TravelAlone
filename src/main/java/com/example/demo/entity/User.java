@@ -26,10 +26,12 @@ public class User {
     @Column(unique = true)
 //    @Email(message = "유효한 이메일 형식이어야 합니다.")
     private String email;
-
-//    @Column(unique = true)
-//    @Size(min = 2, max = 30, message = "닉네임은 2~30자 사이여야 합니다.")
-//    private String nickname; // 닉네임
+    @Column
+    private String city; // 시/도
+    @Column
+    private String district; // 군/구
+    @Column
+    private String detailedAddress; // 상세 주소
     @Column
     private LocalDateTime registrationDate; // 가입일
     @Column
@@ -47,7 +49,6 @@ public class User {
     )
     private Set<Role> roles;
 
-    // 생성자, getter, setter, 기타 메서드 등 추가
 
     /**
      * 사용자의 고유 식별자를 반환합니다.
@@ -81,22 +82,6 @@ public class User {
         return email;
     }
 
-//    /**
-//     * 사용자의 프로필 이미지 URL을 반환합니다.
-//     * @return 프로필 이미지 URL
-//     */
-//    public String getProfileImageUrl() {
-//        return profileImageUrl;
-//    }
-//
-//    /**
-//     * 사용자의 닉네임을 반환합니다.
-//     * @return 닉네임
-//     */
-//    public String getNickname() {
-//        return nickname;
-//    }
-
     /**
      * 사용자의 가입일을 반환합니다.
      * @return 가입일
@@ -127,6 +112,23 @@ public class User {
     public String getSalt() {
         return salt;
     }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public String getDetailedAddress() {
+        return detailedAddress;
+    }
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
     /**
      * 사용자의 성별을 설정합니다.
      * @param gender 성별
@@ -182,8 +184,16 @@ public class User {
         this.salt = salt;
     }
 
-    public Collection<Role> getRoles() {
-        return roles;
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public void setDetailedAddress(String detailedAddress) {
+        this.detailedAddress = detailedAddress;
     }
 }
 
