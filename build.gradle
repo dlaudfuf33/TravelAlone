@@ -24,27 +24,20 @@ repositories {
 }
 
 dependencies {
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'junit:junit:4.13.1'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	annotationProcessor 'org.projectlombok:lombok'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.security:spring-security-jwt'
-	implementation 'io.jsonwebtoken:jjwt:0.9.1'
-	// Springdoc OpenAPI 의존성
-	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
-	// AWS S3 의존성?
-	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-aws
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.1.RELEASE'
-//	implementation 'software.amazon.awssdk:s3:2.17.52'
-
-
-	// Logback 의존성 추가
-//	implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.6'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test' // 스프링 부트 테스트 관련 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // 스프링 데이터 JPA 관련 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // Thymeleaf 템플릿 엔진 관련 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-web' // 스프링 웹 애플리케이션 관련 의존성
+	implementation 'junit:junit:4.13.1' // JUnit 테스트 프레임워크
+	compileOnly 'org.projectlombok:lombok' // Lombok 라이브러리 (컴파일 시 사용, 런타임에는 불필요)
+	runtimeOnly 'com.mysql:mysql-connector-j' // MySQL JDBC 드라이버
+	annotationProcessor 'org.projectlombok:lombok' // Lombok 어노테이션 프로세서
+	implementation 'org.springframework.boot:spring-boot-starter-security' // 스프링 부트 보안 관련 의존성
+	implementation 'org.springframework.security:spring-security-jwt' // 스프링 시큐리티 JWT 관련 의존성
+	implementation 'io.jsonwebtoken:jjwt:0.9.1' // JSON Web Token (JWT) 라이브러리
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9' // Springdoc OpenAPI UI 의존성
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.1.RELEASE' // AWS 클라우드 스타터 의존성
+	implementation 'org.jsoup:jsoup:1.14.2' // Jsoup HTML 파싱 라이브러리
 }
 
 tasks.named('test') {

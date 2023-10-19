@@ -1,14 +1,18 @@
 package com.example.demo.service;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import static com.amazonaws.services.s3.model.CryptoStorageMode.ObjectMetadata;
 
 @Service  // 이 클래스를 스프링 서비스로 등록합니다.
 public class S3Service {
@@ -58,6 +62,35 @@ public class S3Service {
 
         // 변환된 파일을 반환합니다.
         return convertedFile;
+    }
+
+    public String uploadMedia(byte[] mediaData, String fileName) {
+        try {
+            // S3 버킷 이름과 미디어 파일의 파일 이름을 지정합니다.
+            String s3Key = fileName;
+
+            // 미디어 데이터를 업로드하기 위한 ObjectMetadata 설정
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(mediaData.length);
+
+            // S3에 미디어 데이터를 업로드하기 위한 PutObjectRequest를 생성합니다.
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, s3Key, new ByteArrayInputStream(mediaData), metadata);
+
+            // 미디어를 S3에 업로드합니다.
+            amazonS3.putObject(putObjectRequest);
+
+            // 업로드된 미디어의 S3 URL을 반환합니다.
+            System.out.println(s3Key);
+            return generateMediaUrl(s3Key);
+        } catch (Exception e) {
+            // 업로드 중 발생할 수 있는 예외를 처리합니다.
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private String generateMediaUrl(String s3Key) {
+        return "https://" + bucket + ".s3.amazonaws.com/" + s3Key;
     }
 
     public String generateImageUrl(String fileUrl) {

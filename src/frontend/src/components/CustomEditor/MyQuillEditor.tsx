@@ -15,6 +15,9 @@ export default function MyQuillEditor({ onChange }) {
             ['bold', 'italic', 'underline'],
             [{ list: 'ordered' }, { list: 'bullet' }],
             ['image', 'video'],
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'size': ['small', false, 'large', 'huge'] }]
           ],
         },
       });
@@ -42,8 +45,8 @@ export default function MyQuillEditor({ onChange }) {
   }, [quill]);
 
   return (
-    <div>
-      <div ref={quillRef} style={{ height: '400px', zIndex: 2, position: 'relative' }} />
+    <div style={{ position: 'relative', zIndex: 10, overflow: 'visible', width: '100%', height: '480px' }}>
+      <div ref={quillRef} className="quill-editor" />
     </div>
   );
 }

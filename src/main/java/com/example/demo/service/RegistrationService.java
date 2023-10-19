@@ -17,7 +17,7 @@ public class RegistrationService {
     public User registerUser(String username, String password, String email, String roleName) {
         // 사용자 객체 생성
         User user = new User();
-        user.setUsername(username);
+        user.setUserid(username);
         user.setPassword(password); // 비밀번호는 암호화된 상태로 저장됩니다.
         user.setEmail(email);
 

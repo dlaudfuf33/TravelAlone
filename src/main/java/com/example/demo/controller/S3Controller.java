@@ -21,4 +21,6 @@ public class S3Controller {
         // S3Service를 사용하여 파일을 S3에 업로드하고, 업로드된 파일의 S3 URL을 반환합니다.
         return s3Service.uploadFile(file);
     }
+
+
 }

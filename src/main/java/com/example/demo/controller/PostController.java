@@ -9,14 +9,16 @@ import com.example.demo.service.S3Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.catalina.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import java.util.Base64;
 import java.util.List;
 
 //@CrossOrigin(origins = "http://localhost:3000")
@@ -51,9 +53,6 @@ public class PostController {
         }
     }
 
-
-    // 새로운 게시물을 생성하는 엔드포인트
-    @Operation(summary = "새로운 게시물을 생성합니다.")
     @PostMapping("/create")
     public ResponseEntity<Post> createPost(@RequestPart("post") String postStr,
                                            @RequestPart(value = "files", required = false) MultipartFile[] files) {
@@ -61,25 +60,67 @@ public class PostController {
             ObjectMapper objectMapper = new ObjectMapper();
             Post post = objectMapper.readValue(postStr, Post.class);
 
+            // 게시물 생성
             Post createdPost = postService.createPost(post);
 
-            // 파일 업로드 로직 분리
-            if (files != null && files.length > 0) {
-                List<String> fileUrls = new ArrayList<>();
-                for (MultipartFile file : files) {
-                    String fileUrl = handleFileUpload(file, createdPost.getId()); // postId를 전달
-                    if (fileUrl != null) {
-                        fileUrls.add(fileUrl);
+            if (post.getContents() != null) {
+                // HTML 파싱
+                Document document = Jsoup.parse(post.getContents());
+
+                // 이미지 및 동영상 태그 처리
+                Elements mediaElements = document.select("img, video");
+
+                for (Element mediaElement : mediaElements) {
+                    String src = mediaElement.attr("src");
+                    if (src.startsWith("data:image") || src.startsWith("data:video")) {
+                        // Base64 데이터를 추출하고 S3에 업로드
+                        byte[] mediaData = parseBase64Data(src);
+                        String fileExtension = src.startsWith("data:image") ? "jpg" : "mp4"; // 이미지와 동영상을 구분하여 확장자 설정
+                        String mediaUrl = uploadMediaToS3(mediaData, createdPost.getId(), fileExtension);
+                        System.out.println(mediaUrl +"인디 createPost");
+                        // S3 URL로 src 속성 치환
+                        mediaElement.attr("src", mediaUrl);
                     }
                 }
-                createdPost.setFileUrls(objectMapper.writeValueAsString(fileUrls));
+
+                // 변경된 HTML을 다시 게시물에 설정
+                String updatedContent = document.outerHtml();
+                System.out.println(updatedContent +"ㅇㅇㅇ");
+                createdPost.setContents(updatedContent);
+
+                postService.updatePost(createdPost.getId(), createdPost);
+
             }
+
+            // 파일 업로드 로직은 이미 구현되어 있으므로 스킵
 
             System.out.println("게시물 생성: ID " + createdPost.getId() + "의 게시물이 생성됨");
             return ResponseEntity.ok(createdPost);
         } catch (Exception e) {
             System.err.println("게시물 생성 중 오류 발생: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    private byte[] parseBase64Data(String dataUri) {
+        // data URI에서 Base64 데이터 추출 및 디코딩 로직
+        // 예: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...
+        String base64Data = dataUri.split(",")[1];
+        return Base64.getDecoder().decode(base64Data);
+    }
+
+    private String uploadMediaToS3(byte[] mediaData, Long postId, String fileExtension) {
+        try {
+            // S3Service를 사용하여 미디어 데이터를 S3에 업로드합니다.
+            String fileName = "media_" + postId + "." + fileExtension;
+            String s3Url = s3Service.uploadMedia(mediaData, fileName);
+            System.out.println("uploadMediaToS3 : "+s3Url);
+            // 실제로는 업로드 후에 얻은 S3 URL을 반환해야 합니다.
+            return s3Url;
+        } catch (Exception e) {
+            // 업로드 중 오류가 발생한 경우 예외를 처리하십시오.
+            e.printStackTrace();
+            return null;
         }
     }
 

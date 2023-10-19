@@ -3,14 +3,20 @@ import { useRouter } from "next/router";
 import axios from 'axios';
 import BoardWriteUI from "./BoardWrite.presenter";
 // import ReactQuill from 'react-quill';
+import MyQuillEditor from '../../../CustomEditor/MyQuillEditor';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css'; // Quill의 스타일 시트를 추가해줍니다.
 
 
-// 동적 임포트를 사용하여 ReactQuill을 클라이언트 사이드에서만 불러오기
-const ReactQuill = dynamic(
-  () => import('react-quill'),
-  { ssr: false }  // 이를 클라이언트 사이드에서만 불러오도록 설정
+// // 동적 임포트를 사용하여 ReactQuill을 클라이언트 사이드에서만 불러오기
+// const ReactQuill = dynamic(
+//   () => import('react-quill'),
+//   { ssr: false }  // 이를 클라이언트 사이드에서만 불러오도록 설정
+// );
+// MyQuillEditor 동적 임포트
+const MyQuillEditorDynamic = dynamic(
+  () => import('../../../CustomEditor/MyQuillEditor'),
+  { ssr: false }
 );
 
 export default function BoardWrite() {
@@ -86,6 +92,8 @@ export default function BoardWrite() {
       ...prevData,
       contents: value,
     }));
+
+
   };
 
 
@@ -133,7 +141,8 @@ export default function BoardWrite() {
         errors={errors}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
-        handleEditorChange={handleQuillChange} // 이 부분 추가
+        handleEditorChange={handleQuillChange}
+        MyQuillEditor={MyQuillEditorDynamic} // MyQuillEditor를 props로 전달
       />
     </div>
   );

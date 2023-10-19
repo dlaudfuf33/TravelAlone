@@ -4,10 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
+import java.time.LocalDate;
+import java.time.Period;
 @Entity
 @Table(name = "users") // "users" 테이블과 매핑
 public class User {
@@ -125,6 +125,18 @@ public class User {
         return detailedAddress;
     }
 
+    public int getAge() {
+        return calculateAge();
+    }
+    public int calculateAge() {
+        if (dateOfBirth != null) {
+            LocalDate currentDate = LocalDate.now();
+            Period period = Period.between(dateOfBirth, currentDate);
+            return period.getYears();
+        } else {
+            return 0; // 생년월일이 없으면 0을 반환하거나 다른 값을 선택할 수 있습니다.
+        }
+    }
     public Collection<Role> getRoles() {
         return roles;
     }

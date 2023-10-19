@@ -44,10 +44,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User registerUser(String username, String password, String email, String roleName) {
+    public User registerUser(String userid, String password, String email, String roleName) {
         // 사용자 객체 생성
         User user = new User();
-        user.setUsername(username);
+        user.setUserid(userid);
         user.setPassword(password);
         user.setEmail(email);
 
@@ -77,7 +77,7 @@ public class UserService {
         if (existingUser != null) {
             // 업데이트 로직을 구현하고 저장
             // 예를 들어, updatedUser의 필드들을 existingUser에 복사하고 저장
-            existingUser.setUsername(updatedUser.getUsername());
+            existingUser.setUserid(updatedUser.getUserid());
             existingUser.setEmail(updatedUser.getEmail());
             // ...
             return userRepository.save(existingUser);

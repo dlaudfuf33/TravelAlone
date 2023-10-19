@@ -74,8 +74,8 @@ public class Post {
     }
 
     // 내용 설정 메소드
-    public void setContents(String testContent) {
-        this.contents = testContent;
+    public void setContents(String contents) {
+        this.contents = contents;
     }
 
     // 작성자 설정 메소드
