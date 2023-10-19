@@ -127,11 +127,11 @@ public class UserService {
         return destinationRepository.findAll();
     }
 
-//    /**
-//     * 사용자의 프로필과 여행지 특성 간의 유사도를 계산하여 여행지를 추천합니다.
-//     * @param userId 사용자 ID
-//     * @return List<Destination> 추천 여행지 목록
-//     */
+    /**
+     * 사용자의 프로필과 여행지 특성 간의 유사도를 계산하여 여행지를 추천합니다.
+     * @param userId 사용자 ID
+     * @return List<Destination> 추천 여행지 목록
+     */
 //    public List<Destination> recommendDestinations(Long userId) {
 //        User user = getUserById(userId);
 //        List<UserDestination> interactions = getUserInteractions(userId);
