@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -57,6 +59,28 @@ public class UserController {
         if (userRequest.getEmail() == null || userRequest.getEmail().isEmpty()) {
             return "이메일은 필수 입력 항목입니다.";
         }
+        User user = new User();
+        // 주소 정보 파싱 및 분리
+        String[] addressParts = userRequest.getAddress().split(" ");
+        if (addressParts.length >= 4) {
+            String city = addressParts[0]; // 시/도
+            String district = addressParts[1] + " " + addressParts[2]; // 군/구
+            StringBuilder detailedAddress = new StringBuilder();
+            for (int i = 3; i < addressParts.length; i++) {
+                detailedAddress.append(addressParts[i]).append(" ");
+            }
+
+            // 결과 출력
+            System.out.println("시/도: " + city);
+            System.out.println("군/구: " + district);
+            System.out.println("상세주소: " + detailedAddress.toString().trim());
+            user.setCity(city);
+            user.setDistrict(district);
+            user.setDetailedAddress(detailedAddress.toString().trim());
+
+        } else {
+            System.out.println("주소 형식이 올바르지 않습니다.");
+        }
 
         // 랜덤 소금 생성
         String salt = SaltGenerator.generateSalt();
@@ -66,7 +90,6 @@ public class UserController {
         String hashedPassword = passwordEncoder.encode(saltedPassword);
 
         // User 엔티티 생성
-        User user = new User();
         user.setUserid(userRequest.getUserid());
         user.setPassword(hashedPassword);
         user.setEmail(userRequest.getEmail());
@@ -74,9 +97,7 @@ public class UserController {
         user.setDateOfBirth(userRequest.getDateOfBirth());
         user.setGender(userRequest.getGender());
         user.setRegistrationDate(currentTime);
-        user.setCity(userRequest.getCity());
-        user.setDistrict(userRequest.getDistrict());
-        user.setDetailedAddress(userRequest.getDetailedAddress());
+
 
         // UserRepository를 사용하여 사용자 정보를 저장
         userRepository.save(user);
@@ -84,22 +105,6 @@ public class UserController {
         return "가입 successfully!";
     }
 
-
-    @GetMapping
-    @Operation(summary = "모든 사용자 조회")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
-    }
-    @GetMapping("/{userId}")
-    @Operation(summary = "특정 ID의 사용자 조회")
-    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
-        User user = userService.getUserById(userId);
-        if (user != null) {
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
     @PutMapping("/{userId}")
     @Operation(summary = "특정 ID의 사용자 업데이트")
     public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User updatedUser) {
@@ -120,9 +125,11 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @PostMapping("/login")
     @Operation(summary = "사용자 로그인을 위한 엔드포인트")
-    public ResponseEntity<?> loginUser(@RequestBody Map<String, String> requestBody) {
+    public ResponseEntity<?> loginUser(@RequestBody Map<String, String> requestBody, HttpSession session)
+    {
         String userid = requestBody.get("userid");
         String password = requestBody.get("password");
 
@@ -139,20 +146,27 @@ public class UserController {
 
             if (passwordEncoder.matches(saltedPassword, storedPassword)) {
                 // 비밀번호가 일치하면 로그인 성공 처리를 합니다.
-                // JWT 토큰을 생성합니다.
-                String token = generateAuthToken(userid);
+
+                // 사용자 정보를 세션에 저장합니다.
+                session.setAttribute("USER", user);
+
                 // 추가적인 회원 정보를 JSON 응답에 포함시켜 반환합니다.
-                Map<String, Object> response = new HashMap<>();
-                response.put("token", token);
-                response.put("userid", userid);
-                response.put("usergender", user.getGender());
-                response.put("userage", user.getAge());
-                // 토큰을 JSON 응답에 포함시켜 반환합니다.
-                return ResponseEntity.ok(response);
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("userid", userid);
+                responseMap.put("usergender", user.getGender());
+                responseMap.put("userage", user.getAge());
+                return ResponseEntity.ok(responseMap);
             }
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 로그인 실패
+    }
+
+    @PostMapping("/logout")
+    @Operation(summary = "사용자 로그아웃을 위한 엔드포인트")
+    public ResponseEntity<?> logout(HttpSession session) {
+        session.invalidate(); // 세션 무효화
+        return ResponseEntity.ok("로그아웃 되었습니다.");
     }
 
     // 인증 토큰을 생성하는 메서드

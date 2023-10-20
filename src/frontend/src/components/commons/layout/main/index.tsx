@@ -32,34 +32,39 @@ const App: React.FC = () => {
       children:
         index === 0 // 첫 번째 메뉴인 경우
           ? [
+            {
+              key: "1",
+              label: "게시글 작성",
+              onClick: async () => await router.push("/boards/new"),
+            },
+            {
+              key: "2",
+              label: "게시글 목록",
+              onClick: async () => await router.push("/boards"),
+            },
+            {
+              key: "3",
+              label: "추천 많은 글",
+              onClick: () => (window.location.href = "/recommended"),
+            },
+          ]
+          : index === 1 // 두 번째 메뉴인 경우 (여행지 관련)
+            ? [
               {
-                key: "1",
-                label: "게시글 작성",
-                onClick: async () => await router.push("/boards/new"),
+                key: "4",
+                label: "여행지 추천",
+                onClick: async () => await router.push("/travel/recommend"),
               },
               {
-                key: "2",
-                label: "게시글 목록",
-                onClick: async () => await router.push("/boards"),
-              },
-              // If the route is not a part of your Next.js app use window.location.href instead.
-              // This is because Next.js's Router only handles routes within your app.
-              // If it's an external link or a link to a static file you should use an <a> tag with href.
-              {
-                key: "3",
-                label: "추천 많은 글",
-                onClick: () => (window.location.href = "/recommended"),
+                key: "5",
+                label: "여행지 후기",
+                onClick: async () => await router.push("/travel/review"),
               },
             ]
-          : new Array(4).fill(null).map((_, j) => {
-              const subKey = index * 4 + j + 1;
-              return {
-                key: subKey.toString(),
-                label: `option${subKey}`,
-              };
-            }),
+            : [], // 다른 메뉴 항목은 비워둡니다.
     };
   });
+
 
   const {
     token: { colorBgContainer },
@@ -79,9 +84,11 @@ const App: React.FC = () => {
         </Sider>
         <Layout style={{ padding: "0 24px 24px" }}>
           <Breadcrumb style={{ margin: "16px 0" }}>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item>
+            <Breadcrumb items={[
+              { title: 'Home', href: '/' },
+              { title: 'List', href: '/list' },
+              { title: 'App', href: '/app' },
+            ]} />
           </Breadcrumb>
           <Content
             style={{

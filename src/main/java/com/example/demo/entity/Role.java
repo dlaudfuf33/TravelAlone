@@ -1,33 +1,35 @@
 package com.example.demo.entity;
 
 
+import javax.annotation.Resource;
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "roles")
 public class Role {
+
+    public enum RoleName {
+        ROOTADMIN, useadmin0,useadmin1,useadmin2, admin0,admin1,admin2,
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(unique = true)
-    private String name;
+    private RoleName name;
 
-    // 다대다 관계로 User 엔티티와 연결
-    @Column
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    // 1:1 관계로 User 엔티티와 연결
+    @OneToOne(mappedBy = "role")
+    private User user;
 
-    public void setName(String roleName) {
-        this.name = roleName;
+    public void setName(String rootadmin) {
+        this.name= RoleName.valueOf(rootadmin);
     }
 
-    public String getName() {
+    public RoleName getName() {
         return name;
     }
-
-
-    // 생성자, getter, setter 등 필요한 메서드 추가
 }
 

@@ -29,6 +29,7 @@ public class UserDestination {
     @Schema(description = "리뷰")
     private String review;
 
+
     // 사용자가 평가한 여행지의 고유 ID를 반환합니다.
     public Long getId() {
         return id;

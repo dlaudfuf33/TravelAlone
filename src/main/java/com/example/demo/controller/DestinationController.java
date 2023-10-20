@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Destination;
 import com.example.demo.service.DestinationService;
+import com.example.demo.service.RecommendationService;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class DestinationController {
     private DestinationService destinationService;
 
     @Autowired
-    private UserService userService;
+    private RecommendationService recommendationService;
 
     // 모든 여행지 목록을 가져오는 엔드포인트
     @GetMapping
@@ -69,8 +70,7 @@ public class DestinationController {
     @GetMapping("/recommend/popular")
     public List<Destination> getPopularDestinations(@RequestParam int topN) {
         // 1. 사용자 서비스를 통해 인기 있는 여행지를 추천받습니다.
-        List<Destination> recommendedDestinations =
-                userService.recommendPopularDestinations(topN);
+        List<Destination> recommendedDestinations = recommendationService.recommendPopularDestinations(topN);
 
         // 2. 추천된 여행지 목록을 클라이언트에게 반환합니다.
         return recommendedDestinations;

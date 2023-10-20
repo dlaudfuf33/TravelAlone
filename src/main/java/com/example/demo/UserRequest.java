@@ -11,6 +11,7 @@ public class UserRequest {
     private String profileImageUrl;
     private LocalDate dateOfBirth;
     private String gender;
+    private String address; // tmp
     private String city; // 시/도
     private String district; // 군/구
     private String detailedAddress; // 상세 주소    // 다른 필드도 추가할 수 있습니다.ss
@@ -47,5 +48,9 @@ public class UserRequest {
 
     public String getDetailedAddress() {
         return detailedAddress;
+    }
+
+    public String getAddress() {
+        return address;
     }
 }

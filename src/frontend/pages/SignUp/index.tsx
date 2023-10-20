@@ -186,7 +186,7 @@ export default function LoginPage(): JSX.Element {
           email: Email,
           dateOfBirth: "2023-10-14", // 날짜는 고정값입니다. 필요에 따라 수정하세요.
           gender: null,
-
+          address: address
         });
       } catch (error) {
         console.error("회원가입 실패", error);

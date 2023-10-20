@@ -2,6 +2,7 @@ package com.example.demo.entity;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 import javax.validation.constraints.NotBlank;
@@ -41,13 +42,9 @@ public class User {
     @Column
     private String salt; // 소금
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles;
+    @OneToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
 
     /**
@@ -137,9 +134,24 @@ public class User {
             return 0; // 생년월일이 없으면 0을 반환하거나 다른 값을 선택할 수 있습니다.
         }
     }
-    public Collection<Role> getRoles() {
-        return roles;
+
+    public String getAgeRange() {
+        int age = calculateAge();
+        if (age < 20) {
+            return "10";
+        } else if (age < 30) {
+            return "20";
+        } else if (age < 40) {
+            return "30";
+        } else if (age < 50) {
+            return "40";
+        } else if (age < 60) {
+            return "50";
+        } else {
+            return "60이상";
+        }
     }
+
 
     /**
      * 사용자의 성별을 설정합니다.
@@ -206,6 +218,14 @@ public class User {
 
     public void setDetailedAddress(String detailedAddress) {
         this.detailedAddress = detailedAddress;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role rootRole) {
+        this.role=rootRole;
     }
 }
 

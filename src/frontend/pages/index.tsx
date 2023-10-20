@@ -28,26 +28,41 @@ const items2: MenuProps["items"] = [
     children:
       index === 0 // 첫 번째 메뉴인 경우
         ? [
+          {
+            key: "1",
+            label: "게시글 작성",
+            onClick: () =>
+              (window.location.href = "http://localhost:3000/boards/new"),
+          },
+          {
+            key: "2",
+            label: "게시글 목록",
+            onClick: () =>
+              (window.location.href = "http://localhost:3000/boards"),
+          },
+          {
+            key: "3",
+            label: "추천 많은 글",
+            onClick: () =>
+              (window.location.href = "http://example.com/recommended"),
+          },
+        ]
+        : index === 1 // 두 번째 메뉴인 경우 (여행지 관련)
+          ? [
             {
-              key: "1",
-              label: "게시글 작성",
+              key: "4",
+              label: "여행지 추천",
               onClick: () =>
-                (window.location.href = "http://localhost:3000/boards/new"),
+                (window.location.href = "http://localhost:3000/travel/recommend"),
             },
             {
-              key: "2",
-              label: "게시글 목록",
-              onClick: () =>
-                (window.location.href = "http://localhost:3000/boards"),
-            },
-            {
-              key: "3",
-              label: "추천 많은 글",
+              key: "5",
+              label: "여행지 후기",
               onClick: () =>
                 (window.location.href = "http://example.com/recommended"),
             },
           ]
-        : new Array(4).fill(null).map((_, j) => {
+          : new Array(4).fill(null).map((_, j) => {
             const subKey = index * 4 + j + 1;
             return {
               key: subKey.toString(),

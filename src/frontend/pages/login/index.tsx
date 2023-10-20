@@ -149,21 +149,32 @@ export default function LoginPage(): JSX.Element {
       // 서버에 로그인 요청
       const response = await axios.post("http://localhost:8080/api/users/login",
         {
-          userid: userid, // 사용자명과 비밀번호를 요청 본문에 담아 보냅니다.
+          userid: userid,
           password: password,
         }
       );
-  
-      const token: string | undefined = response.data.token;
-  
-      if (token !== undefined && token !== "") {
-        localStorage.setItem("token", token);
-        console.log("로그인 성공. 토큰이 저장되었습니다.");
+
+      if (response.status === 200) {
+        console.log("로그인 성공.");
       } else {
-        throw new Error("토큰이 존재하지 않습니다.");
+        throw new Error("로그인 실패.");
       }
     } catch (error) {
       console.error("로그인 실패", error);
+    }
+  };
+
+  const handleLogout = async (): Promise<void> => {
+    try {
+      const response = await axios.post("http://localhost:8080/api/users/logout");
+
+      if (response.status === 200) {
+        console.log("로그아웃 성공.");
+      } else {
+        throw new Error("로그아웃 실패.");
+      }
+    } catch (error) {
+      console.error("로그아웃 실패", error);
     }
   };
 
@@ -193,7 +204,12 @@ export default function LoginPage(): JSX.Element {
           <br />
           <SignUpLink>Sign Up!</SignUpLink>
           <br />
+
           <NoAccessLink> Can't access your account?</NoAccessLink>
+
+
+          {/* // 로그아웃 버튼 예제 */}
+          <button onClick={handleLogout}>Logout</button>
         </LoginForm>
 
         {/* You can add the ErrorPage component here when you need it */}

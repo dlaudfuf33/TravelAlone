@@ -8,5 +8,7 @@ import java.util.List;
 
 @Repository
 public interface PreferenceWeightsRepository extends JpaRepository<PreferenceWeights, Long> {
-    List<PreferenceWeights> findByAgeGroupAndGender(String ageGroup, String gender);
+
+    List<PreferenceWeights> findByAgeRangeAndGender(String ageRange, String gender);
+
 }

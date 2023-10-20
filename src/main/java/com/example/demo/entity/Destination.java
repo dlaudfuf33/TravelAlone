@@ -1,10 +1,13 @@
 package com.example.demo.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.persistence.*;
+import lombok.NoArgsConstructor;
+
 
 @Schema(description = "여행지 정보")
 @Entity
 @Table(name = "destinations")
+@NoArgsConstructor
 public class Destination {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

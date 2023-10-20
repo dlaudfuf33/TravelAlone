@@ -71,5 +71,9 @@ public class PreferenceWeights {
     public void setWeight(double weight) {
         this.weight=weight;
     }
+
+    public double getWeight() {
+        return this.weight;
+    }
 }
 
