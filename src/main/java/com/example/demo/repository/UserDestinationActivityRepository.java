@@ -3,6 +3,10 @@ package com.example.demo.repository;
 import com.example.demo.entity.UserDestinationActivity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface UserDestinationActivityRepository extends JpaRepository<UserDestinationActivity, Long> {
-    // 필요한 쿼리 메서드를 여기에 추가...
+    List<UserDestinationActivity> findByUserId(Long userId);
+
 }

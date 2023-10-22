@@ -3,14 +3,16 @@ package com.example.demo.controller;
 import com.example.demo.entity.Destination;
 import com.example.demo.service.DestinationService;
 import com.example.demo.service.RecommendationService;
-import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@Tag(name = "DESTINATIONS API", description = "여행지(Destinations) 관련 API 엔드포인트")
 @RestController
 @RequestMapping("/api/destinations")
 public class DestinationController {
@@ -21,6 +23,7 @@ public class DestinationController {
     private RecommendationService recommendationService;
 
     // 모든 여행지 목록을 가져오는 엔드포인트
+    @Operation(summary = "모든 여행지 목록 조회")
     @GetMapping
     public ResponseEntity<List<Destination>> getAllDestinations() {
         // 1. 여행지 서비스를 통해 모든 여행지 목록을 조회합니다.
@@ -31,6 +34,7 @@ public class DestinationController {
     }
 
     // 특정 ID의 여행지를 가져오는 엔드포인트
+    @Operation(summary = "특정 ID의 여행지 조회")
     @GetMapping("/{id}")
     public ResponseEntity<Destination> getDestinationById(@PathVariable Long id) {
         // 1. 여행지 서비스를 통해 ID에 해당하는 여행지 정보를 조회합니다.
@@ -47,8 +51,10 @@ public class DestinationController {
     }
 
     // 새로운 여행지를 생성하는 엔드포인트
+    @Operation(summary = "새로운 여행지 생성")
     @PostMapping
     public ResponseEntity<Destination> createDestination(@RequestBody Destination destination) {
+        destination.setAverageRating(0.0);
         // 1. 여행지 서비스를 통해 새로운 여행지를 생성하고 저장합니다.
         Destination createdDestination = destinationService.saveDestination(destination);
 
@@ -57,6 +63,7 @@ public class DestinationController {
     }
 
     // 특정 ID의 여행지를 삭제하는 엔드포인트
+    @Operation(summary = "특정 ID의 여행지 삭제")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDestination(@PathVariable Long id) {
         // 1. 여행지 서비스를 통해 ID에 해당하는 여행지를 삭제합니다.
@@ -67,6 +74,7 @@ public class DestinationController {
     }
 
     // 인기 있는 여행지를 추천하는 엔드포인트
+    @Operation(summary = "인기 있는 (평점높은순) 여행지 추천")
     @GetMapping("/recommend/popular")
     public List<Destination> getPopularDestinations(@RequestParam int topN) {
         // 1. 사용자 서비스를 통해 인기 있는 여행지를 추천받습니다.

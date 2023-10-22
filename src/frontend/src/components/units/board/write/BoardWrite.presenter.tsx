@@ -72,12 +72,6 @@ export default function BoardWriteUI({
           />
         </S.InputWrapper>
         <S.InputWrapper>
-          <S.Label>파일 업로드</S.Label>
-          <S.FileUpload
-            type="file"
-            name="file"
-            onChange={handleChange} // 파일 선택 시 handleChange 호출
-          />
         </S.InputWrapper>
         <S.ButtonWrapper>
           <S.SubmitButton type="submit">

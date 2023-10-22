@@ -79,4 +79,6 @@ public class UserDestination {
     public void setDestination(Destination destination) {
         this.destination = destination;
     }
+
+
 }

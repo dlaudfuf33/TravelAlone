@@ -131,6 +131,12 @@ const NoAccessLink = styled.h6`
 //   text-decoration: underline;
 //   cursor: pointer;
 // `;
+function setCookie(name, value, days) {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+}
+
 
 export default function LoginPage(): JSX.Element {
   const [userid, setUserid] = useState<string>("");
@@ -156,6 +162,14 @@ export default function LoginPage(): JSX.Element {
 
       if (response.status === 200) {
         console.log("로그인 성공.");
+
+        // 세션 ID를 쿠키로 저장
+        setCookie('sessionId', response.data.sessionId, 1); // 쿠키는 1일 동안 유지됨
+        localStorage.setItem('authToken', response.data.token);
+
+
+        // window.location.href = "http://localhost:3000"; // 로그인 성공 시 리다이렉트
+
       } else {
         throw new Error("로그인 실패.");
       }
@@ -166,10 +180,18 @@ export default function LoginPage(): JSX.Element {
 
   const handleLogout = async (): Promise<void> => {
     try {
+      // 세션 ID를 삭제
+      setCookie('sessionId', '', -1); // 쿠키를 삭제하기 위해 음수 값 설정
+
+      // 로컬 스토리지에서 토큰 제거
+      localStorage.removeItem('authToken');
+
       const response = await axios.post("http://localhost:8080/api/users/logout");
 
       if (response.status === 200) {
         console.log("로그아웃 성공.");
+        window.location.href = "http://localhost:3000"; // 로그아웃 성공 시 리다이렉트
+
       } else {
         throw new Error("로그아웃 실패.");
       }

@@ -14,6 +14,8 @@ public interface DestinationRepository extends JpaRepository<Destination, Long> 
             "GROUP BY d.id " +
             "ORDER BY AVG(ud.rating) DESC")
     List<Destination> findTopNDestinationsByAverageRating(Pageable pageable);
+    @Query("SELECT d FROM Destination d WHERE d.features LIKE %?1%")
+    List<Destination> findByFeature(String feature);
 
-
+    Destination findDestinationById(long id);
 }

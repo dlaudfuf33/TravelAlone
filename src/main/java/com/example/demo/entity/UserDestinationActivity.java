@@ -1,9 +1,11 @@
 package com.example.demo.entity;
 
 import javax.persistence.*;
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "user_destinations_Action")
 public class UserDestinationActivity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,24 +18,22 @@ public class UserDestinationActivity {
     @ManyToOne
     @JoinColumn(name = "destination_id")
     private Destination destination;
-
     @Column(name = "start_time")
-    private LocalDateTime startTime; // 페이지 접속 시작 시간
+    private long startTime; // 페이지 접속 시작 시간
 
     @Column(name = "end_time")
-    private LocalDateTime endTime;   // 페이지 접속 종료 시간
-
+    private long endTime;   // 페이지 접속 종료 시간
     @Column(name = "photo_clicked")
-    private Boolean photoClicked;    // 사진 클릭 여부
+    private Boolean photoClicked = Boolean.FALSE;    // 사진 클릭 여부
 
     @Column(name = "scrolled")
-    private Boolean scrolled;        // 스크롤 여부
+    private Boolean scrolled = Boolean.FALSE;        // 스크롤 여부
 
     // 기본 생성자
     public UserDestinationActivity() {}
 
     // 생성자
-    public UserDestinationActivity(User user, Destination destination, LocalDateTime startTime, LocalDateTime endTime, Boolean photoClicked,Boolean scrolled) {
+    public UserDestinationActivity(User user, Destination destination, Long startTime, Long endTime, Boolean photoClicked,Boolean scrolled) {
         this.user = user;
         this.destination = destination;
         this.startTime = startTime;
@@ -67,34 +67,40 @@ public class UserDestinationActivity {
         this.destination = destination;
     }
 
-    public LocalDateTime getStartTime() {
+    public Long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(Long startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public Long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(Long endTime) {
         this.endTime = endTime;
     }
-
     public boolean getPhotoClicked() {
-        return photoClicked;
+        return photoClicked != null && photoClicked;
     }
 
     public void setPhotoClickeded(boolean photoClicked) {
         this.photoClicked = photoClicked;
     }
-    public boolean getScolled() {
-        return scrolled;
+    public boolean getScrolled() {
+        return scrolled != null && scrolled;
     }
 
     public void setScolled(boolean scrolled) {
         this.scrolled = scrolled;
+    }
+
+    public void setDuration(long durationInMillis) {
+        this.destination=destination;
+    }
+    public long getDurationInSeconds() {
+        return (endTime - startTime) / 1000; // 밀리초를 초로 변환
     }
 }

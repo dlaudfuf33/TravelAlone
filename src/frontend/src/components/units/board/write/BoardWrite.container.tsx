@@ -7,13 +7,6 @@ import MyQuillEditor from '../../../CustomEditor/MyQuillEditor';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css'; // Quill의 스타일 시트를 추가해줍니다.
 
-
-// // 동적 임포트를 사용하여 ReactQuill을 클라이언트 사이드에서만 불러오기
-// const ReactQuill = dynamic(
-//   () => import('react-quill'),
-//   { ssr: false }  // 이를 클라이언트 사이드에서만 불러오도록 설정
-// );
-// MyQuillEditor 동적 임포트
 const MyQuillEditorDynamic = dynamic(
   () => import('../../../CustomEditor/MyQuillEditor'),
   { ssr: false }

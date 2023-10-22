@@ -38,6 +38,7 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9' // Springdoc OpenAPI UI 의존성
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.1.RELEASE' // AWS 클라우드 스타터 의존성
 	implementation 'org.jsoup:jsoup:1.14.2' // Jsoup HTML 파싱 라이브러리
+
 }
 
 tasks.named('test') {

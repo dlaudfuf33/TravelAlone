@@ -3,20 +3,17 @@ package com.example.demo.controller;
 import com.example.demo.*;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.TokenService;
 import com.example.demo.service.UserService;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -32,14 +29,50 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    // JWT 비밀 키
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    @Autowired
+    private TokenService tokenService;
 
-    // JWT 만료 시간 (초 단위)
-    @Value("${jwt.expiration}")
-    private long jwtExpiration;
 
+    @GetMapping("/userinfo")
+    @Operation(summary = "사용자 정보를 가져오는 엔드포인트")
+    public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String token) {
+        try {
+
+            // "Bearer 토큰값" 형태에서 실제 토큰 값을 추출합니다.
+            String jwtToken = token.substring(7); // "Bearer " 부분을 제거
+
+            // 토큰을 검증하고 클레임(Claims) 객체를 얻습니다.
+            Claims claims = tokenService.parseToken(jwtToken);
+
+            // 클레임에서 필요한 정보를 추출합니다.
+            String userid = (String) claims.get("sub");
+
+            User user = userRepository.findByUserid(userid);
+            if (user != null) {
+                // 필요한 사용자 정보를 응답에 추가
+                Map<String, Object> response = new HashMap<>();
+                response.put("id", user.getId());
+                response.put("userid", user.getUserid());
+                response.put("userEmail", user.getEmail());
+                response.put("usergender", user.getGender());
+                response.put("userage", user.getAge());
+                response.put("city", user.getCity());
+                response.put("district", user.getDistrict());
+                response.put("detailedAddress", user.getDetailedAddress());
+                response.put("registrationDate", user.getRegistrationDate());
+                response.put("dateOfBirth", user.getDateOfBirth());
+
+                return ResponseEntity.ok(response);
+            } else {
+                // 사용자를 찾을 수 없는 경우에 대한 처리
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (Exception e) {
+            // 토큰이 유효하지 않을 경우 예외 처리
+            System.out.println(e+"토큰이 유효하지 않을 경우 예외 처리");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
 
     // POST 요청을 통해 새로운 사용자를 등록하는 엔드포인트
     @Operation(summary = "사용자 가입을 위한 엔드포인트")
@@ -128,12 +161,11 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "사용자 로그인을 위한 엔드포인트")
-    public ResponseEntity<?> loginUser(@RequestBody Map<String, String> requestBody, HttpSession session)
-    {
+    public ResponseEntity<?> loginUser(@RequestBody Map<String, String> requestBody) {
         String userid = requestBody.get("userid");
         String password = requestBody.get("password");
 
-        System.out.println("userid : " + userid + "password : "+ password);
+        System.out.println("userid : " + userid +"//"+ "password : "+ password);
         // 사용자 정보를 가져옵니다.
         User user = userRepository.findByUserid(userid);
         System.out.println("객체 : " + user);
@@ -146,44 +178,20 @@ public class UserController {
 
             if (passwordEncoder.matches(saltedPassword, storedPassword)) {
                 // 비밀번호가 일치하면 로그인 성공 처리를 합니다.
-
-                // 사용자 정보를 세션에 저장합니다.
-                session.setAttribute("USER", user);
-
+                // JWT 토큰을 생성합니다.
+                String token = tokenService.generateAuthToken(userid); // TokenService를 사용하여 토큰 생성
                 // 추가적인 회원 정보를 JSON 응답에 포함시켜 반환합니다.
-                Map<String, Object> responseMap = new HashMap<>();
-                responseMap.put("userid", userid);
-                responseMap.put("usergender", user.getGender());
-                responseMap.put("userage", user.getAge());
-                return ResponseEntity.ok(responseMap);
+                Map<String, Object> response = new HashMap<>();
+                response.put("token", token);
+                response.put("userid", userid);
+                response.put("usergender", user.getGender());
+                response.put("userage", user.getAge());
+                // 토큰을 JSON 응답에 포함시켜 반환합니다.
+                System.out.println("Login-");
+                return ResponseEntity.ok(response);
             }
         }
-
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 로그인 실패
-    }
-
-    @PostMapping("/logout")
-    @Operation(summary = "사용자 로그아웃을 위한 엔드포인트")
-    public ResponseEntity<?> logout(HttpSession session) {
-        session.invalidate(); // 세션 무효화
-        return ResponseEntity.ok("로그아웃 되었습니다.");
-    }
-
-    // 인증 토큰을 생성하는 메서드
-    private String generateAuthToken(String userid) {
-        // 현재 시간을 기반으로 Date 객체를 생성합니다. 이는 토큰 발행 시간으로 사용됩니다.
-        Date now = new Date();
-
-        // 토큰의 만료 시간을 설정합니다. 현재 시간에서 설정된 만료 시간(초 단위)을 더한 값을 가진 Date 객체를 생성합니다.
-        Date expiryDate = new Date(now.getTime() + jwtExpiration * 1000);
-
-        // JWT 빌더를 사용하여 토큰을 생성합니다.
-        return Jwts.builder()
-                .setSubject(userid) // 토큰의 주체로 사용자명을 설정합니다. 이는 토큰을 해석했을 때 어느 사용자의 토큰인지 확인하는데 사용됩니다.
-                .setIssuedAt(now) // 토큰 발행 시간을 설정합니다.
-                .setExpiration(expiryDate) // 토큰의 만료 시간을 설정합니다.
-                .signWith(SignatureAlgorithm.HS512, jwtSecret) // HMAC-SHA512 알고리즘과 비밀 키를 사용하여 토큰에 서명합니다.
-                .compact(); // JWT를 압축된 문자열 형태로 반환합니다.
     }
 
 }

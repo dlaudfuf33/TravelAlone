@@ -1,14 +1,15 @@
 package com.example.demo.entity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 import java.time.Period;
+import java.util.Collection;
+
 @Entity
 @Table(name = "users") // "users" 테이블과 매핑
 public class User {
@@ -227,5 +228,7 @@ public class User {
     public void setRole(Role rootRole) {
         this.role=rootRole;
     }
+
+
 }
 

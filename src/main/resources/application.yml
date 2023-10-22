@@ -1,6 +1,12 @@
 server:
   port: 8080
 spring:
+  logging:
+    level:
+      root: INFO
+      com.example.demo: DEBUG
+    pattern:
+      console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
   servlet:
     multipart:
       max-file-size: 100MB
@@ -14,6 +20,7 @@ spring:
     username: root
     password: dkrakek1
   jpa:
+    open-in-view: false
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -53,3 +60,4 @@ cloud:
     credentials:
       access-key: ${AWS_ACCESS_KEY_ID}
       secret-key: ${AWS_SECRET_ACCESS_KEY}
+

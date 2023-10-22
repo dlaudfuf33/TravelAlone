@@ -39,7 +39,7 @@ public class PostController {
 
 
     // 모든 게시물 목록을 가져오는 엔드포인트
-    @Operation(summary = "모든 게시물을 조회합니다.")
+    @Operation(summary = "모든 게시물의 모든 데이터를 조회합니다.")
     @GetMapping
     public ResponseEntity<List<Post>> getAllPosts() {
         try {
@@ -53,6 +53,7 @@ public class PostController {
         }
     }
 
+    @Operation(summary = "게시물을 생성합니다.")
     @PostMapping("/create")
     public ResponseEntity<Post> createPost(@RequestPart("post") String postStr,
                                            @RequestPart(value = "files", required = false) MultipartFile[] files) {
@@ -67,33 +68,20 @@ public class PostController {
                 // HTML 파싱
                 Document document = Jsoup.parse(post.getContents());
 
-                // 이미지 및 동영상 태그 처리
-                Elements mediaElements = document.select("img, video");
+                // 이미지 처리 함수 호출
+                processImages(document, createdPost);
 
-                for (Element mediaElement : mediaElements) {
-                    String src = mediaElement.attr("src");
-                    if (src.startsWith("data:image") || src.startsWith("data:video")) {
-                        // Base64 데이터를 추출하고 S3에 업로드
-                        byte[] mediaData = parseBase64Data(src);
-                        String fileExtension = src.startsWith("data:image") ? "jpg" : "mp4"; // 이미지와 동영상을 구분하여 확장자 설정
-                        String mediaUrl = uploadMediaToS3(mediaData, createdPost.getId(), fileExtension);
-                        System.out.println(mediaUrl +"인디 createPost");
-                        // S3 URL로 src 속성 치환
-                        mediaElement.attr("src", mediaUrl);
-                    }
-                }
+                // 비디오 처리 함수 호출
+                processVideos(document, createdPost);
 
                 // 변경된 HTML을 다시 게시물에 설정
                 String updatedContent = document.outerHtml();
-                System.out.println(updatedContent +"ㅇㅇㅇ");
+                System.out.println(updatedContent + "ㅇㅇㅇ");
                 createdPost.setContents(updatedContent);
 
                 postService.updatePost(createdPost.getId(), createdPost);
 
             }
-
-            // 파일 업로드 로직은 이미 구현되어 있으므로 스킵
-
             System.out.println("게시물 생성: ID " + createdPost.getId() + "의 게시물이 생성됨");
             return ResponseEntity.ok(createdPost);
         } catch (Exception e) {
@@ -102,30 +90,9 @@ public class PostController {
         }
     }
 
-    private byte[] parseBase64Data(String dataUri) {
-        // data URI에서 Base64 데이터 추출 및 디코딩 로직
-        // 예: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...
-        String base64Data = dataUri.split(",")[1];
-        return Base64.getDecoder().decode(base64Data);
-    }
-
-    private String uploadMediaToS3(byte[] mediaData, Long postId, String fileExtension) {
-        try {
-            // S3Service를 사용하여 미디어 데이터를 S3에 업로드합니다.
-            String fileName = "media_" + postId + "." + fileExtension;
-            String s3Url = s3Service.uploadMedia(mediaData, fileName);
-            System.out.println("uploadMediaToS3 : "+s3Url);
-            // 실제로는 업로드 후에 얻은 S3 URL을 반환해야 합니다.
-            return s3Url;
-        } catch (Exception e) {
-            // 업로드 중 오류가 발생한 경우 예외를 처리하십시오.
-            e.printStackTrace();
-            return null;
-        }
-    }
-
 
     // 특정 ID의 게시물을 가져오는 엔드포인트
+    @Operation(summary = "특정 ID의 게시물을 가져옵니다.")
     @GetMapping("/view/{id}")
     public ResponseEntity<Post> getPostById(@PathVariable Long id) {
         try {
@@ -209,6 +176,8 @@ public class PostController {
         }
     }
 
+
+
     private String handleFileUpload(MultipartFile file, Long postId) throws Exception {
         if (file != null && !file.isEmpty()) {
             String contentType = file.getContentType();
@@ -243,6 +212,83 @@ public class PostController {
         return null;
     }
 
+
+    // 이미지 처리 함수
+    private void processImages(Document document, Post createdPost) {
+        // HTML 문서 내에서 이미지 태그를 선택합니다.
+        Elements imgElements = document.select("img");
+        int imgIndex = 0;
+
+        // 모든 이미지 태그에 대한 루프를 실행합니다.
+        for (int i = 0; i < imgElements.size(); i++) {
+            Element imgElement = imgElements.get(i);
+            String src = imgElement.attr("src");
+
+            // 이미지 태그의 src 속성이 data URI 형식인지 확인합니다.
+            if (src.startsWith("data:image")) {
+                // 이미지 데이터를 Base64로부터 추출합니다.
+                byte[] imageData = parseBase64Data(src);
+
+                // 이미지를 S3에 업로드하고 이미지 URL을 가져옵니다.
+                String imageUrl = uploadMediaToS3(imageData, createdPost.getId(), "jpg");
+                System.out.println("Image " + (i+1) + " Uploaded URL: " + imageUrl);
+
+                // HTML에서 해당 이미지 태그의 src 속성을 업로드한 이미지 URL로 교체합니다.
+                imgElements.get(i).attr("src", imageUrl);
+                System.out.println("Updated Document: " + document);
+                imgIndex++;
+            }
+        }
+    }
+
+    // 동영상 처리 함수
+    private void processVideos(Document document, Post createdPost) {
+        // HTML 문서 내에서 비디오 태그를 선택합니다.
+        Elements videoElements = document.select("video");
+        int videoIndex = 0;
+
+        // 모든 비디오 태그에 대한 루프를 실행합니다.
+        for (int i = 0; i < videoElements.size(); i++) {
+            Element videoElement = videoElements.get(i);
+            String src = videoElement.attr("src");
+
+            // 비디오 태그의 src 속성이 data URI 형식인지 확인합니다.
+            if (src.startsWith("data:video")) {
+                // 비디오 데이터를 Base64로부터 추출합니다.
+                byte[] videoData = parseBase64Data(src);
+
+                // 비디오를 S3에 업로드하고 비디오 URL을 가져옵니다.
+                String videoUrl = uploadMediaToS3(videoData, createdPost.getId(), "mp4");
+
+                // HTML에서 해당 비디오 태그의 src 속성을 업로드한 비디오 URL로 교체합니다.
+                videoElements.get(i).attr("src", videoUrl);
+                videoIndex++;
+            }
+        }
+    }
+
+    // Base64 데이터를 추출하고 디코딩하는 함수
+    private byte[] parseBase64Data(String dataUri) {
+        // data URI에서 Base64 데이터 추출 및 디코딩 로직
+        // 예: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...
+        String base64Data = dataUri.split(",")[1];
+        return Base64.getDecoder().decode(base64Data);
+    }
+
+    // 미디어 데이터를 S3에 업로드하고 URL을 반환하는 함수
+    private String uploadMediaToS3(byte[] mediaData, Long postId, String fileExtension) {
+        try {
+            // S3Service를 사용하여 미디어 데이터를 S3에 업로드합니다.
+            String fileName = "media_" + postId + "_" + System.currentTimeMillis() + "." + fileExtension;
+            String s3Url = s3Service.uploadMedia(mediaData, fileName);
+            // 실제로는 업로드 후에 얻은 S3 URL을 반환해야 합니다.
+            return s3Url;
+        } catch (Exception e) {
+            // 업로드 중 오류가 발생한 경우 예외를 처리하십시오.
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }
 

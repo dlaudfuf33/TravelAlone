@@ -27,7 +27,7 @@ public class Destination {
     private String features;
     @Column
     @Schema(description = "여행지의 평균 평점")
-    private Double averageRating;
+    private Double averageRating = 0.0;
 
 
     // 파라미터 있는 생성자 추가
@@ -95,5 +95,14 @@ public class Destination {
     // 여행지에 대한 설명을 설정합니다.
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Destination{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                // 다른 속성들을 추가하여 원하는 형식으로 출력할 수 있습니다.
+                '}';
     }
 }

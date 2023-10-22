@@ -6,13 +6,19 @@ import com.example.demo.service.RecommendationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+
+@Tag(name = "RECOMMENDATIONS API", description = "추천(Recommendations) 관련 API 엔드포인트")
 @RestController
 @RequestMapping("/api/recommendations")
 public class RecommendationController {
+    private static final Logger logger = LoggerFactory.getLogger(RecommendationController.class);
 
     @Autowired
     private RecommendationService recommendationService;
@@ -21,8 +27,10 @@ public class RecommendationController {
      * 모든 추천 목록을 가져오는 엔드포인트
      * @return 모든 추천 목록
      */
+    @Operation(summary = "모든 추천 목록 조회")
     @GetMapping
     public ResponseEntity<List<Recommendation>> getAllRecommendations() {
+        logger.info("1. 서비스를 통해 모든 추천 목록을 조회합니다.");
         // 1. 서비스를 통해 모든 추천 목록을 조회합니다.
         return ResponseEntity.ok(recommendationService.getAllRecommendations());
     }
@@ -32,6 +40,7 @@ public class RecommendationController {
      * @param id 추천 ID
      * @return 해당 ID의 추천 정보
      */
+    @Operation(summary = "특정 ID의 추천 조회")
     @GetMapping("/{id}")
     public ResponseEntity<Recommendation> getRecommendationById(@PathVariable Long id) {
         // 1. 서비스를 통해 ID에 해당하는 추천 정보를 조회합니다.
@@ -45,6 +54,7 @@ public class RecommendationController {
      * @param id 삭제할 추천 ID
      * @return 삭제 성공 시 204 No Content 상태 코드
      */
+    @Operation(summary = "특정 ID의 추천 삭제")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRecommendation(@PathVariable Long id) {
         // 1. 서비스를 통해 ID에 해당하는 추천 정보를 삭제합니다.
@@ -59,6 +69,7 @@ public class RecommendationController {
      * @param count 추천 받고 싶은 여행지의 수
      * @return 추천된 여행지 목록
      */
+    @Operation(summary = "사용자에게 여행지 개인추천")
     @GetMapping("/foruser")
     public ResponseEntity<List<Destination>> recommendDestinationsForUser(
             @RequestParam String userId, // 유저의 아이디를 받음
