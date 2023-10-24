@@ -16,17 +16,8 @@ public class PreferenceWeights {
     @Column(name = "gender")
     private String gender;
 
-    @Column(name = "season")
-    private String season;
-
     @Column(name = "location")
     private String location;
-
-    @Column(name = "travelType")
-    private String travelType;
-
-    @Column(name = "feature")
-    private String feature;
 
     @Column(name = "weight")
     private Double weight;
@@ -37,10 +28,7 @@ public class PreferenceWeights {
     public void setValuesFrom(PreferenceWeights preference) {
         this.ageRange = preference.ageRange;
         this.gender = preference.gender;
-        this.season = preference.season;
         this.location = preference.location;
-        this.travelType = preference.travelType;
-        this.feature = preference.feature;
         this.weight = preference.weight;
     }
 
@@ -56,16 +44,9 @@ public class PreferenceWeights {
         this.gender=gender;
     }
 
-    public void setSeason(String season) {
-        this.season=season;
-    }
 
     public void setLocation(String location) {
         this.location=location;
-    }
-
-    public void setTravelType(String travelType) {
-        this.travelType=travelType;
     }
 
     public void setWeight(double weight) {

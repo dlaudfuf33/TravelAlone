@@ -163,8 +163,6 @@ export default function LoginPage(): JSX.Element {
       if (response.status === 200) {
         console.log("로그인 성공.");
 
-        // 세션 ID를 쿠키로 저장
-        setCookie('sessionId', response.data.sessionId, 1); // 쿠키는 1일 동안 유지됨
         localStorage.setItem('authToken', response.data.token);
 
 
@@ -183,10 +181,16 @@ export default function LoginPage(): JSX.Element {
       // 세션 ID를 삭제
       setCookie('sessionId', '', -1); // 쿠키를 삭제하기 위해 음수 값 설정
 
+      const authToken = localStorage.getItem('authToken'); // 로컬 스토리지에서 토큰 가져오기
+
+      const response = await axios.post("http://localhost:8080/api/users/logout", null, {
+        headers: {
+          Authorization: `Bearer ${authToken}` // JWT 토큰을 헤더에 추가
+        },
+      });
+
       // 로컬 스토리지에서 토큰 제거
       localStorage.removeItem('authToken');
-
-      const response = await axios.post("http://localhost:8080/api/users/logout");
 
       if (response.status === 200) {
         console.log("로그아웃 성공.");

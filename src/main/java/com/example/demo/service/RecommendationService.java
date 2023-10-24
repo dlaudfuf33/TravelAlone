@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.controller.RecommendationController;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -213,10 +212,9 @@ public class RecommendationService {
     private double calculateScoreForDestination(Map<Destination, Double> userProfile, Destination destination) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, List<String>> destinationFeatures = objectMapper.readValue(destination.getFeatures(), Map.class);
+            List<String> features = objectMapper.readValue(destination.getFeatures(), List.class); // 직접 List로 변환
 
             double score = 0.0;
-            List<String> features = destinationFeatures.get("특성");
             for (String feature : features) {
                 if (userProfile.containsKey(destination) && userProfile.get(destination) >= 4.0) {
                     score += 5.0;

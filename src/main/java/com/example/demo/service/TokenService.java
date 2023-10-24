@@ -1,12 +1,18 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.BlacklistedToken;
+import com.example.demo.repository.BlacklistedTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class TokenService {
@@ -18,6 +24,11 @@ public class TokenService {
     // JWT 만료 시간 (초 단위)
     @Value("${jwt.expiration}")
     private long jwtExpiration;
+
+    @Autowired
+    private BlacklistedTokenRepository blacklistedTokenRepository;
+
+
 
     // 인증 토큰을 생성하는 메서드
     public String generateAuthToken(String userid) {
@@ -35,6 +46,7 @@ public class TokenService {
                 .compact();
     }
 
+
     public Claims parseToken(String jwtToken) {
         try {
             return Jwts.parser()
@@ -44,5 +56,16 @@ public class TokenService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Scheduled(fixedRate = 3600000) // 매 시간마다 실행
+    public void removeExpiredTokens() {
+        List<BlacklistedToken> expiredTokens =
+                blacklistedTokenRepository.findAllByExpiryDateBefore(LocalDateTime.now());
+        blacklistedTokenRepository.deleteAll(expiredTokens);
+    }
+
+    public boolean isTokenBlacklisted(String token) {
+        return blacklistedTokenRepository.findByToken(token).isPresent();
     }
 }

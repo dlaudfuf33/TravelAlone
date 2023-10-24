@@ -60,7 +60,7 @@ const Modal: React.FC<ModalProps> = ({ destination, onClose }) => {
     }
   };
 
-  const descriptionObject = JSON.parse(destination.description);
+  const descriptionObject = JSON.parse(destination.feature);
   const featuresArray = descriptionObject.특성;
 
   return (

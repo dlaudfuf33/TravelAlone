@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.*;
+import com.example.demo.entity.BlacklistedToken;
 import com.example.demo.entity.User;
+import com.example.demo.repository.BlacklistedTokenRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.TokenService;
 import com.example.demo.service.UserService;
@@ -32,6 +34,9 @@ public class UserController {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private BlacklistedTokenRepository blacklistedTokenRepository;
+
 
     @GetMapping("/userinfo")
     @Operation(summary = "사용자 정보를 가져오는 엔드포인트")
@@ -41,7 +46,12 @@ public class UserController {
             // "Bearer 토큰값" 형태에서 실제 토큰 값을 추출합니다.
             String jwtToken = token.substring(7); // "Bearer " 부분을 제거
 
+            // 토큰이 블랙리스트에 있는지 확인합니다.
+            if (tokenService.isTokenBlacklisted(jwtToken)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("This token has been blacklisted.");
+            }
             // 토큰을 검증하고 클레임(Claims) 객체를 얻습니다.
+
             Claims claims = tokenService.parseToken(jwtToken);
 
             // 클레임에서 필요한 정보를 추출합니다.
@@ -164,18 +174,15 @@ public class UserController {
     public ResponseEntity<?> loginUser(@RequestBody Map<String, String> requestBody) {
         String userid = requestBody.get("userid");
         String password = requestBody.get("password");
-
         System.out.println("userid : " + userid +"//"+ "password : "+ password);
         // 사용자 정보를 가져옵니다.
         User user = userRepository.findByUserid(userid);
         System.out.println("객체 : " + user);
-
         if (user != null) {
             // 사용자가 존재하면 비밀번호를 비교하여 인증을 수행합니다.
             String storedPassword = user.getPassword();
             String salt = user.getSalt();
             String saltedPassword = password + salt;
-
             if (passwordEncoder.matches(saltedPassword, storedPassword)) {
                 // 비밀번호가 일치하면 로그인 성공 처리를 합니다.
                 // JWT 토큰을 생성합니다.
@@ -194,5 +201,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 로그인 실패
     }
 
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+        BlacklistedToken blacklistedToken = new BlacklistedToken();
+        blacklistedToken.setToken(token);
+        // 토큰의 유효기간을 설정합니다. (예: 토큰의 유효기간)
+        blacklistedToken.setExpiryDate(LocalDateTime.now().plusHours(1));
+        blacklistedTokenRepository.save(blacklistedToken);
+
+        return ResponseEntity.ok().build();
+    }
 }
 
