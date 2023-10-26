@@ -1,9 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Comment;
-import com.example.demo.entity.FileEntity;
 import com.example.demo.entity.Post;
-import com.example.demo.repository.FileEntityRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +16,6 @@ public class PostService {
     private PostRepository postRepository;
     @Autowired
     private CommentRepository commentRepository;
-    @Autowired
-    private FileEntityRepository fileEntityRepository;
 
 
 
@@ -57,12 +53,6 @@ public class PostService {
         try {
             // 게시물 조회
             Post post = postRepository.findById(id).orElse(null);
-
-            if (post != null) {
-                // 게시물과 연관된 파일 정보를 함께 조회
-                List<FileEntity> fileEntities = fileEntityRepository.findByPost(post);
-                post.setFileEntities(fileEntities);
-            }
 
             return post;
         } catch (Exception e) {

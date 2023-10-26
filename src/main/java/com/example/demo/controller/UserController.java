@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.*;
 import com.example.demo.entity.BlacklistedToken;
 import com.example.demo.entity.User;
+import com.example.demo.entity.UserRequest;
 import com.example.demo.repository.BlacklistedTokenRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.TokenService;
@@ -63,6 +64,7 @@ public class UserController {
                 Map<String, Object> response = new HashMap<>();
                 response.put("id", user.getId());
                 response.put("userid", user.getUserid());
+//                response.put("userPassword",user.getPassword());
                 response.put("userEmail", user.getEmail());
                 response.put("usergender", user.getGender());
                 response.put("userage", user.getAge());
@@ -104,26 +106,8 @@ public class UserController {
         }
         User user = new User();
         // 주소 정보 파싱 및 분리
-        String[] addressParts = userRequest.getAddress().split(" ");
-        if (addressParts.length >= 4) {
-            String city = addressParts[0]; // 시/도
-            String district = addressParts[1] + " " + addressParts[2]; // 군/구
-            StringBuilder detailedAddress = new StringBuilder();
-            for (int i = 3; i < addressParts.length; i++) {
-                detailedAddress.append(addressParts[i]).append(" ");
-            }
+        parseAndSetAddress(user,userRequest.getAddress());
 
-            // 결과 출력
-            System.out.println("시/도: " + city);
-            System.out.println("군/구: " + district);
-            System.out.println("상세주소: " + detailedAddress.toString().trim());
-            user.setCity(city);
-            user.setDistrict(district);
-            user.setDetailedAddress(detailedAddress.toString().trim());
-
-        } else {
-            System.out.println("주소 형식이 올바르지 않습니다.");
-        }
 
         // 랜덤 소금 생성
         String salt = SaltGenerator.generateSalt();
@@ -148,17 +132,62 @@ public class UserController {
         return "가입 successfully!";
     }
 
-    @PutMapping("/{userId}")
+    @PutMapping("/update/{userId}")
     @Operation(summary = "특정 ID의 사용자 업데이트")
-    public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User updatedUser) {
-        User user = userService.updateUser(userId, updatedUser);
-        if (user != null) {
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> updateUser(
+            @PathVariable Long userId,
+            @RequestHeader("Authorization") String token,
+            @RequestBody UserRequest updatedUserInfo) {
+        try {
+            // 토큰에서 사용자 ID 추출
+            String jwtToken = token.substring(7); // "Bearer " 제거
+            if (tokenService.isTokenBlacklisted(jwtToken)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 블랙리스트에 있습니다.");
+            }
+            Claims claims = tokenService.parseToken(jwtToken);
+            String userid = (String) claims.get("sub");
+
+            // 요청받은 ID와 토큰의 ID가 일치하는지 검증
+            if (!userId.equals(userRepository.findByUserid(userid).getId())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증되지 않은 시도입니다.");
+            }
+
+            // DB에서 사용자 정보 가져오기
+            User user = userRepository.findByUserid(userid);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+            }
+
+            // 요청된 비밀번호가 현재 비밀번호와 일치하는지 확인
+            String providedPassword = updatedUserInfo.getPassword(); // 사용자가 요청 본문에 제공한 비밀번호
+            String salt = user.getSalt(); // DB에서 가져온 솔트
+            String saltedPassword = providedPassword + salt; // 솔트 추가
+
+            if (!passwordEncoder.matches(saltedPassword, user.getPassword())) {
+                // 비밀번호가 일치하지 않는 경우
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호가 틀렸습니다.");
+            }
+
+            // 주소 파싱 및 설정
+            parseAndSetAddress(user, updatedUserInfo.getAddress());
+
+            // 기타 사용자 정보 업데이트
+            user.setEmail(updatedUserInfo.getEmail());
+            user.setGender(updatedUserInfo.getGender());
+            user.setDateOfBirth(updatedUserInfo.getDateOfBirth());
+            // 필요하다면 user 객체에 대한 추가적인 setter 메서드 호출을 여기에 더 추가할 수 있습니다.
+
+            User updatedUser = userService.updateUser(userId, user); // DB 업데이트
+
+            return ResponseEntity.ok(updatedUser); // 업데이트된 사용자 정보 반환
+
+        } catch (Exception e) {
+            // 예외 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류가 발생했습니다: " + e.getMessage());
         }
     }
-    @DeleteMapping("/{userId}")
+
+    @DeleteMapping("/delete/{userId}")
     @Operation(summary = "특정 ID의 사용자 삭제")
     public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
         boolean deleted = userService.deleteUser(userId);
@@ -211,6 +240,26 @@ public class UserController {
         blacklistedTokenRepository.save(blacklistedToken);
 
         return ResponseEntity.ok().build();
+    }
+
+    // 주소 파싱 메서드
+    private void parseAndSetAddress(User user, String address) {
+        String[] addressParts = address.split(" ");
+        if (addressParts.length >= 4) {
+            String city = addressParts[0]; // 시/도
+            String district = addressParts[1] + " " + addressParts[2]; // 군/구
+            StringBuilder detailedAddress = new StringBuilder();
+            for (int i = 3; i < addressParts.length; i++) {
+                detailedAddress.append(addressParts[i]).append(" ");
+            }
+
+            user.setCity(city);
+            user.setDistrict(district);
+            user.setDetailedAddress(detailedAddress.toString().trim());
+
+        } else {
+            System.out.println("주소 형식이 올바르지 않습니다.");
+        }
     }
 }
 

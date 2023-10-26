@@ -211,8 +211,7 @@ public class RecommendationService {
      */
     private double calculateScoreForDestination(Map<Destination, Double> userProfile, Destination destination) {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<String> features = objectMapper.readValue(destination.getFeatures(), List.class); // 직접 List로 변환
+            List<String> features = destination.getFeatures();
 
             double score = 0.0;
             for (String feature : features) {
@@ -281,7 +280,7 @@ public class RecommendationService {
     }
 
     /**
-     * 특정 여행지의 특성을 JSON 형태에서 List<String>으로 변환하여 반환합니다.
+     * 특정 여행지의 특성을 List<String>으로 반환합니다.
      *
      * @param destinationId 특성을 추출하려는 여행지의 ID
      * @return 해당 여행지의 특성 목록
@@ -290,18 +289,8 @@ public class RecommendationService {
         // 1. 여행지 ID를 사용하여 해당 여행지 정보를 조회합니다.
         Destination destination = destinationRepository.findDestinationById(destinationId);
 
-        // 2. 여행지 정보에서 특성을 JSON 형태로 가져옵니다.
-        String featuresJson = destination.getFeatures();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            // 3. JSON 형태의 특성을 List<String>으로 변환합니다.
-            return objectMapper.readValue(featuresJson, new TypeReference<List<String>>() {});
-        } catch (Exception e) {
-            // 4. 변환 중 오류가 발생하면 오류를 출력하고 빈 목록을 반환합니다.
-            e.printStackTrace();
-            return Collections.emptyList();
-        }
+        // 2. 여행지 정보에서 특성을 List<String> 형태로 바로 반환합니다.
+        return destination.getFeatures();
     }
     /**
      * 주어진 특성 목록과 일치하는 여행지를 검색하여 반환합니다.

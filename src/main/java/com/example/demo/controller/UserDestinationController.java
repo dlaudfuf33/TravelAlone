@@ -61,7 +61,6 @@ public class UserDestinationController {
         userDestination.setUser(user);
         userDestination.setDestination(destination);
         userDestination.setRating(rating);
-        userDestination.setReview(review);
 
         // 리뷰와 평점 저장
         UserDestination savedUserDestination = userDestinationService.saveUserDestination(userDestination);

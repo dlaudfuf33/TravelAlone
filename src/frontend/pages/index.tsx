@@ -53,13 +53,19 @@ const items2: MenuProps["items"] = [
               key: "4",
               label: "여행지 추천",
               onClick: () =>
-                (window.location.href = "http://localhost:3000/travel/recommend"),
+                (window.location.href = "http://localhost:3000/travel/recommend/recommend"),
             },
             {
               key: "5",
-              label: "여행지 후기",
+              label: "여행지 작성",
               onClick: () =>
-                (window.location.href = "http://example.com/recommended"),
+                (window.location.href = "http://localhost:3000/travel/create/write"),
+            },
+            {
+              key: "5",
+              label: "여행지 수정",
+              onClick: () =>
+                (window.location.href = "http://localhost:3000/travel/update/update"),
             },
           ]
           : new Array(4).fill(null).map((_, j) => {

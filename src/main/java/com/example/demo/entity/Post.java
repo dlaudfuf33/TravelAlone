@@ -56,9 +56,9 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-    // Post 엔터티와 File 엔터티 간의 관계를 정의합니다.
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FileEntity> fileEntities = new ArrayList<>();
+//    // Post 엔터티와 File 엔터티 간의 관계를 정의합니다.
+//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<FileEntity> fileEntities = new ArrayList<>();
 
 
     // Setter 메소드들
@@ -177,9 +177,9 @@ public class Post {
 
     public String getFileUrls() {return fileUrls;}
 
-    public <E> List<FileEntity> getFileEntities() {return fileEntities;}
-
-    public void setFileEntities(List<FileEntity> fileEntities) {
-        this.fileEntities = fileEntities;
-    }
+//    public <E> List<FileEntity> getFileEntities() {return fileEntities;}
+//
+//    public void setFileEntities(List<FileEntity> fileEntities) {
+//        this.fileEntities = fileEntities;
+//    }
 }
