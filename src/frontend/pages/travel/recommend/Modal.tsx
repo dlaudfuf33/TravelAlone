@@ -86,7 +86,7 @@ const Modal: React.FC<ModalProps> = ({ destination, onClose }) => {
         </div>
         <div className={styles['modal-details']}>
           <h2 className={styles['destination-name']}>{destination.name}</h2>
-          {/* <h2 className={styles['destination-name']}>{destination.contents}</h2> */}
+          <h2 className={styles['destination-name']}>{destination.contents}</h2>
           <div className={styles['modal-description']}>
             {destination.features.map((feature, index) => (
               <span key={index} className={styles['hashtag']}>
