@@ -97,7 +97,11 @@ public class DestinationController {
             newDestination.addRating(userRating);
 
             // 추천 계절을 설정합니다.
-            newDestination.setBestSeason(recommendedSeason);
+            // 추천 계절을 리스트로 변환합니다.
+            if (recommendedSeason != null) {
+                List<String> bestSeasons = Arrays.asList(recommendedSeason.split(","));
+                newDestination.setBestSeasons(bestSeasons); // 변경된 필드명에 맞게 메서드 이름을 수정하세요.
+            }
 
             // 3. contents를 파싱하여 이미지와 비디오 데이터를 추출하고 S3에 업로드합니다.
             Document document = Jsoup.parse(contents); // HTML 파싱
@@ -179,7 +183,10 @@ public class DestinationController {
                         destination.addRating(userRating);
                         break;
                     case "recommendedSeason":
-                        destination.setBestSeason(newValue);
+                        List<String> bestSeason = Arrays.stream(newValue.split(","))
+                                .filter(tag -> !tag.isEmpty()) // 빈 문자열 제외
+                                .collect(Collectors.toList());
+                        destination.setBestSeason(bestSeason);
                         break;
                     // 다른 필드에 대한 업데이트 케이스 추가 가능
                     default:

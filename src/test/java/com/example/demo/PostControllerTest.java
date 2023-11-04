@@ -61,7 +61,7 @@ public class PostControllerTest {
 //            if ((i & 0b10000) != 0) post.setVideoUrl("Test Video URL " + i);
 
             // 평균 평점을 설정한다.
-            post.setAverageRating(4.5);
+//            post.setAverageRating(4.5);
 
             // 설정이 완료된 Post 객체를 데이터베이스에 저장한다.
             postRepository.save(post);

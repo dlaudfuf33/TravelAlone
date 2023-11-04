@@ -101,7 +101,7 @@ export default function Write() {
 
       if (response.data.id) {
         alert("여행지가 성공적으로 생성되었습니다.");
-        router.push(`/destinations/${response.data.id}`);
+        router.push(`/travel/recommend/recommend`);
       } else {
         alert("여행지 생성에 실패하였습니다.");
       }

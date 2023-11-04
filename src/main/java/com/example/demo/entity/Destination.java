@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.converter.BestSeasonsConverter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -47,8 +48,13 @@ public class Destination {
     private String region;
 
     @Column
+    @Schema(description = "여행지의 비용")
+    private String tourcost;
+
+    @Convert(converter = BestSeasonsConverter.class)
+    @Column
     @Schema(description = "여행지가 가장 좋은 계절")
-    private String bestSeason;
+    private List<String>  bestSeason;
 
     @Column
     @Schema(description = "평점의 총 합")
@@ -172,5 +178,9 @@ public class Destination {
                 ", averageRating=" + averageRating +
                 ", ratingCount=" + ratingCount +
                 '}';
+    }
+
+    public void setBestSeasons(List<String> bestSeasons) {
+        this.bestSeason =bestSeasons;
     }
 }
