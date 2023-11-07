@@ -138,6 +138,7 @@ public class UserController {
             @PathVariable Long userId,
             @RequestHeader("Authorization") String token,
             @RequestBody UserRequest updatedUserInfo) {
+        System.out.println(updatedUserInfo);
         try {
             // 토큰에서 사용자 ID 추출
             String jwtToken = token.substring(7); // "Bearer " 제거
@@ -169,12 +170,19 @@ public class UserController {
             }
 
             // 주소 파싱 및 설정
-            parseAndSetAddress(user, updatedUserInfo.getAddress());
+            if(updatedUserInfo.getAddress()!=null) {
+                parseAndSetAddress(user, updatedUserInfo.getAddress());
+            }
 
             // 기타 사용자 정보 업데이트
+            System.out.println("이메일   "+updatedUserInfo.getEmail());
             user.setEmail(updatedUserInfo.getEmail());
+
+            System.out.println("성별   " +updatedUserInfo.getGender());
             user.setGender(updatedUserInfo.getGender());
-            user.setDateOfBirth(updatedUserInfo.getDateOfBirth());
+
+//            System.out.println(updatedUserInfo.getDateOfBirth());
+//            user.setDateOfBirth(updatedUserInfo.getDateOfBirth());
             // 필요하다면 user 객체에 대한 추가적인 setter 메서드 호출을 여기에 더 추가할 수 있습니다.
 
             User updatedUser = userService.updateUser(userId, user); // DB 업데이트
@@ -183,6 +191,7 @@ public class UserController {
 
         } catch (Exception e) {
             // 예외 처리
+            System.out.println(e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류가 발생했습니다: " + e.getMessage());
         }
     }

@@ -53,4 +53,21 @@ public class UserRequest {
     public String getAddress() {
         return address;
     }
+
+    @Override
+    public String toString() {
+        return "UserRequest{" +
+                "userid='" + userid + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", profileImageUrl='" + profileImageUrl + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", gender='" + gender + '\'' +
+                ", address='" + address + '\'' +
+                ", city='" + city + '\'' +
+                ", district='" + district + '\'' +
+                ", detailedAddress='" + detailedAddress + '\'' +
+                '}';
+    }
+
 }

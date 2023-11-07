@@ -1,4 +1,5 @@
 package com.example.demo.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 
@@ -42,6 +43,7 @@ public class User {
     @Column
     private String gender; // 성별
     @Column
+    @JsonIgnore
     private String salt; // 소금
 
     @OneToOne
