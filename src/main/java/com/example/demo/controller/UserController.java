@@ -176,10 +176,13 @@ public class UserController {
 
             // 기타 사용자 정보 업데이트
             System.out.println("이메일   "+updatedUserInfo.getEmail());
+            if(updatedUserInfo.getEmail()!=null && updatedUserInfo.getEmail().equals("")){
             user.setEmail(updatedUserInfo.getEmail());
+            }
 
             System.out.println("성별   " +updatedUserInfo.getGender());
-            user.setGender(updatedUserInfo.getGender());
+            if(updatedUserInfo.getGender()!=null && updatedUserInfo.getGender().equals("")){
+                user.setGender(updatedUserInfo.getGender());}
 
 //            System.out.println(updatedUserInfo.getDateOfBirth());
 //            user.setDateOfBirth(updatedUserInfo.getDateOfBirth());
