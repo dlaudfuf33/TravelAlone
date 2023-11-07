@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController  // 이 클래스를 REST 컨트롤러로 등록합니다.
 @RequestMapping("/api/s3")  // 이 컨트롤러의 기본 URL 경로를 설정합니다.
 public class S3Controller {
-
     @Autowired  // S3Service 객체를 스프링에서 자동으로 주입합니다.
     private S3Service s3Service;
 

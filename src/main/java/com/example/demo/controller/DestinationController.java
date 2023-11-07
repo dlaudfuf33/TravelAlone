@@ -149,7 +149,6 @@ public class DestinationController {
             for (Map.Entry<String, String> entry : updateFields.entrySet()) {
                 String updateField = entry.getKey();
                 String newValue = entry.getValue();
-
                 switch (updateField) {
                     case "name":
                         destination.setName(newValue);

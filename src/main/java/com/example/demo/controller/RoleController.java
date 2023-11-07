@@ -16,7 +16,6 @@ public class RoleController {
 
     @Autowired
     private RoleService roleService;
-
     @Operation(summary = "모든 역할을 조회합니다.")
     @GetMapping
     public List<Role> getAllRoles() {

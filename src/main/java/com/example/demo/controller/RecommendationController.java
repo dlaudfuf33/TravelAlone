@@ -77,7 +77,6 @@ public class RecommendationController {
     ) {
         // userId와 count를 사용하여 추천 여행지를 가져옴
         List<Destination> recommendedDestinations = recommendationService.recommendDestinationsForUser(userId, count);
-
         // 추천된 여행지를 ResponseEntity로 래핑하여 반환
         return ResponseEntity.ok(recommendedDestinations);
     }
