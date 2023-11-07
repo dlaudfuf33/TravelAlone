@@ -186,7 +186,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류가 발생했습니다: " + e.getMessage());
         }
     }
-
     @DeleteMapping("/delete/{userId}")
     @Operation(summary = "특정 ID의 사용자 삭제")
     public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
