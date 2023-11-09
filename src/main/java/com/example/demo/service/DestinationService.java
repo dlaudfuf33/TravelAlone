@@ -58,12 +58,12 @@ public class DestinationService {
     // 특정 여행지의 평균 평점 업데이트
     @Transactional
     public void updateAverageRatingForDestination(Long destinationId) {
-        Double averageRating = userDestinationRepository.findAverageRatingByDestinationId(destinationId);
-        if (averageRating != null) {
+        Double rating = userDestinationRepository.findAverageRatingByDestinationId(destinationId);
+        if (rating != null) {
             Optional<Destination> optionalDestination = destinationRepository.findById(destinationId);
             if (optionalDestination.isPresent()) {
                 Destination destination = optionalDestination.get();
-                destination.setAverageRating(averageRating);
+                destination.setRating(rating);
                 destinationRepository.save(destination);
             }
         }
@@ -94,4 +94,9 @@ public class DestinationService {
             throw new IllegalArgumentException("유효하지 않은 여행지 ID: " + destinationId);
         }
     }
+
+    public List<Destination> searchByAuthor(String authorName) {
+        return destinationRepository.findByAuthorName(authorName);
+    }
+
 }

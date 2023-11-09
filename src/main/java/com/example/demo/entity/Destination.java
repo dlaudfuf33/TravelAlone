@@ -31,6 +31,18 @@ public class Destination {
     @Schema(description = "여행지의 이름")
     private String name;
 
+    @Column(nullable = false)
+    @Schema(description = "작성자명")
+    private String authorName;
+
+    @Column(nullable = true)
+    @Schema(description = "회원의 아이디")
+    private String userId;
+
+    @Column(nullable = true)
+    @Schema(description = "게시글 비밀번호")
+    private String password;
+
     @Column(nullable = false, columnDefinition = "LONGTEXT")
     @Schema(description = "여행지의 상세 내용 (HTML 형식)")
     private String contents;
@@ -61,8 +73,9 @@ public class Destination {
     private Double totalRating = 0.0;
 
     @Column
+    @JoinColumn(name = "rating")
     @Schema(description = "여행지의 평균 평점")
-    private Double averageRating = 0.0;
+    private Double rating = 0.0;
 
     @Column
     @Schema(description = "평점을 제공한 사용자 수")
@@ -79,10 +92,10 @@ public class Destination {
     private Timestamp updatedAt;
 
     // 파라미터 있는 생성자 추가
-    public Destination(String name, List<String> features, Double averageRating, String imageUrl, String contents) {
+    public Destination(String name, List<String> features, Double rating, String imageUrl, String contents) {
         this.name = name;
         this.features = features;
-        this.averageRating = averageRating;
+        this.rating = rating;
         this.imageUrl = imageUrl;
         this.contents = contents;
     }
@@ -112,12 +125,12 @@ public class Destination {
         return contents;
     }
 
-    public Double getAverageRating() {
-        return averageRating;
+    public Double getRating() {
+        return rating;
     }
 
-    public void setAverageRating(Double averageRating) {
-        this.averageRating = averageRating;
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 
     // 여행지의 고유 ID를 설정합니다.
@@ -152,7 +165,7 @@ public class Destination {
     public void addRating(Double newRating) {
         this.totalRating += newRating;
         this.ratingCount++;
-        this.averageRating = this.totalRating / this.ratingCount;
+        this.rating = this.totalRating / this.ratingCount;
     }
 
     /**
@@ -162,7 +175,7 @@ public class Destination {
      */
     public void updateRating(Double oldRating, Double newRating) {
         this.totalRating = this.totalRating - oldRating + newRating;
-        this.averageRating = this.totalRating / this.ratingCount;
+        this.rating = this.totalRating / this.ratingCount;
     }
 
     @Override
@@ -175,12 +188,16 @@ public class Destination {
                 ", features=" + features +
                 ", region='" + region + '\'' +
                 ", bestSeason='" + bestSeason + '\'' +
-                ", averageRating=" + averageRating +
+                ", averageRating=" + rating +
                 ", ratingCount=" + ratingCount +
                 '}';
     }
 
     public void setBestSeasons(List<String> bestSeasons) {
         this.bestSeason =bestSeasons;
+    }
+
+    public void setAuthor(String userIdFromRequest) {
+        this.authorName=userIdFromRequest;
     }
 }

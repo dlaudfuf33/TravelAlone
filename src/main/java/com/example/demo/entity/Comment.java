@@ -122,6 +122,18 @@ public class Comment {
         return createdAt;
     }
 
+
+    @Schema(description = "댓글 작성 시간")
+    public Timestamp setUpdateAt(Timestamp updateAt) {
+        return this.updateAt=updateAt;
+    }
+
+
+    @Schema(description = "댓글 작성 시간")
+    public Timestamp getUpdateAt() {
+        return updateAt;
+    }
+
     /**
      * 댓글의 평점(rating)을 반환합니다.
      *
@@ -136,5 +148,13 @@ public class Comment {
     public void setPost(Post post) {
         this.post = post;
     }
+
+    public void setId(Long id) {
+        this.id=id;
+    }
+    public Long getPostId() {
+        return this.post.getId();
+    }
+
 }
 

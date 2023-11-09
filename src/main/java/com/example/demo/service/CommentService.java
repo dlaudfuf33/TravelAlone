@@ -88,6 +88,10 @@ public class CommentService {
         commentRepository.deleteById(id);
     }
 
+    public List<Comment> getCommentsByPostId(Long postId) {
+        return commentRepository.findByPost_Id(postId);
+    }
+
 
     // 기타 비즈니스 로직 및 메서드 추가
 }

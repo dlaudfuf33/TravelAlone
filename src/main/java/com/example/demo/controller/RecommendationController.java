@@ -70,10 +70,10 @@ public class RecommendationController {
      * @return 추천된 여행지 목록
      */
     @Operation(summary = "사용자에게 여행지 개인추천")
-    @GetMapping("/foruser")
+    @GetMapping("/foruser/{userId}/{count}")
     public ResponseEntity<List<Destination>> recommendDestinationsForUser(
-            @RequestParam String userId, // 유저의 아이디를 받음
-            @RequestParam int count // 추천 받길 원하는 여행지의 갯수를 받음
+            @PathVariable String userId,
+            @PathVariable int count
     ) {
         // userId와 count를 사용하여 추천 여행지를 가져옴
         List<Destination> recommendedDestinations = recommendationService.recommendDestinationsForUser(userId, count);

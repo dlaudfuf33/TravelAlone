@@ -24,6 +24,12 @@ public class Post {
 
     @Column(nullable = false) // 컬럼의 NOT NULL 제약 조건을 명시합니다.
     private String author; // 게시글의 작성자입니다.
+    @Column(nullable = true) // 컬럼의 NOT NULL 제약 조건을 명시합니다.
+    private String userId; // 게시글의 작성자입니다.
+
+    @Column(nullable = true)
+    private String password; // 비회원의 비밀번호 필드 추가
+
 
     @Column // 이 필드가 컬럼임을 명시합니다.
     @CreationTimestamp
@@ -45,9 +51,6 @@ public class Post {
     @Column(precision = 3, scale = 2) // 컬럼의 정밀도와 스케일을 명시합니다.
     private Double averageRating; // 게시글의 평균 평점입니다.
 
-    @Column(nullable = true)
-    private String password; // 비회원의 비밀번호 필드 추가
-
     @Lob  // 큰 문자열을 저장할 수 있도록 Lob 어노테이션을 사용합니다.
     private String fileUrls;  // 파일 URL들을 저장할 필드입니다.
 
@@ -56,9 +59,6 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-//    // Post 엔터티와 File 엔터티 간의 관계를 정의합니다.
-//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<FileEntity> fileEntities = new ArrayList<>();
 
 
     // Setter 메소드들
@@ -128,6 +128,9 @@ public class Post {
         return this.id;
     }
 
+    public Long getPostId() {
+        return this.id;
+    }
     // 제목 반환 메소드
     public String getTitle() {
         return this.title;
@@ -177,9 +180,11 @@ public class Post {
 
     public String getFileUrls() {return fileUrls;}
 
-//    public <E> List<FileEntity> getFileEntities() {return fileEntities;}
-//
-//    public void setFileEntities(List<FileEntity> fileEntities) {
-//        this.fileEntities = fileEntities;
-//    }
+    public void setUserId(String n) {
+        this.userId=n;
+    }
+
+    public String getUserId() {
+        return this.userId;
+    }
 }

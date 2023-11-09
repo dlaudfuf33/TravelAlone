@@ -4,6 +4,8 @@ import java.util.List;
 
 public class CreateDestinationRequest {
     private String name;
+    private String authorName;
+    private String password;
     private String region;
     private String contents;
     private Double userRating;
@@ -63,4 +65,14 @@ public class CreateDestinationRequest {
     public String getFeaturesString() {return featuresString;
     }
     public void setFeaturesString(String featuresString) {this.featuresString=featuresString;}
+
+    public String getAuthor() {
+        return this.authorName;
+    }
+
+    public Object getPassword() {
+        return this.password;
+    }
+
+
 }

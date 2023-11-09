@@ -1,11 +1,14 @@
 package com.example.demo.controller;
 
+import antlr.Token;
 import com.example.demo.MediaProcessor;
 import com.example.demo.entity.CreateDestinationRequest;
 import com.example.demo.entity.Destination;
 import com.example.demo.entity.UpdateDestinationRequest;
 import com.example.demo.service.DestinationService;
 import com.example.demo.service.RecommendationService;
+import com.example.demo.service.TokenService;
+import io.jsonwebtoken.Claims;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Tag(name = "DESTINATIONS API", description = "여행지(Destinations) 관련 API 엔드포인트")
@@ -35,6 +37,9 @@ public class DestinationController {
 
     @Autowired
     private MediaProcessor mediaProcessor;
+
+    @Autowired
+    private TokenService tokenService;
 
     // 모든 여행지 목록을 가져오는 엔드포인트
     @Operation(summary = "모든 여행지 목록 조회")
@@ -67,12 +72,52 @@ public class DestinationController {
             return ResponseEntity.notFound().build();
         }
     }
+    // 작성자명으로 여행지를 가져오는 엔드포인트
+    @Operation(summary = "특정 작성자명으로 여행지 조회")
+    @GetMapping("/searchByAuthor/{authorName}")
+    public ResponseEntity<List<Destination>> searchByAuthor(@PathVariable String authorName) {
+        List<Destination> destinations = destinationService.searchByAuthor(authorName);
+
+        if (!destinations.isEmpty()) {
+            return ResponseEntity.ok(destinations);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
     @Operation(summary = "새로운 여행지 생성")
     @PostMapping("/create")
-    public ResponseEntity<Destination> createDestination(@RequestBody CreateDestinationRequest request) {
+    public ResponseEntity<?> createDestination(@RequestHeader("Authorization") String token, @RequestBody CreateDestinationRequest request) {
         try {
+            String userId="";
+            if (token!=null) {
+                // 토큰 검증
+                String jwtToken = token.substring(7); // "Bearer " 제거
+                if (tokenService.isTokenBlacklisted(jwtToken)) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 블랙리스트에 있습니다.");
+                }
+                Claims claims = tokenService.parseToken(jwtToken);
+                if (claims == null) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 블랙리스트에 있습니다.");
+                }
+                userId = (String) claims.get("sub");
+            }
             Destination newDestination = new Destination();
+
+            // 작성자명과 비밀번호로 회원 여부 확인
+            if (request.getAuthor() != null && request.getPassword() != null) {
+                // 비회원인 경우
+                newDestination.setUserId(""); // 또는 원하는 값으로 설정
+            } else if (userId != null) {
+                // 회원인 경우
+                String userIdFromRequest = userId;
+                newDestination.setAuthor(userIdFromRequest);
+                newDestination.setUserId(userIdFromRequest);
+                newDestination.setPassword(null);
+            } else {
+                return ResponseEntity.badRequest().body("작성자명 또는 비밀번호가 누락되었습니다.");
+            }
             // 1. 사용자 입력에서 여행지 정보를 추출합니다.
             String name = request.getName();
             String region = request.getRegion();

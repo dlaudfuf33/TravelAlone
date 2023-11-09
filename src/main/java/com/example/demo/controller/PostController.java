@@ -3,14 +3,15 @@ package com.example.demo.controller;
 import com.example.demo.MediaProcessor;
 import com.example.demo.entity.Post;
 import com.example.demo.service.PostService;
+import com.example.demo.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.util.List;
@@ -24,6 +25,8 @@ public class PostController {
     private PostService postService;
     @Autowired
     private MediaProcessor mediaProcessor;
+    @Autowired
+    private TokenService tokenService;
 
 
     // 모든 게시물 목록을 가져오는 엔드포인트
@@ -41,38 +44,83 @@ public class PostController {
         }
     }
 
+
     @Operation(summary = "게시물을 생성합니다.")
     @PostMapping("/create")
-    public ResponseEntity<Post> createPost(@RequestPart("post") String postStr) {
+    public ResponseEntity<?> createPost(@RequestHeader("Authorization") String token, @RequestPart("post") String postStr) {
         try {
+            String userId="";
+            if (token!=null) {
+                // 토큰 검증
+                String jwtToken = token.substring(7); // "Bearer " 제거
+                if (tokenService.isTokenBlacklisted(jwtToken)) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 블랙리스트에 있습니다.");
+                }
+                Claims claims = tokenService.parseToken(jwtToken);
+                if (claims == null) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 블랙리스트에 있습니다.");
+                }
+                userId = (String) claims.get("sub");
+            }
+
             ObjectMapper objectMapper = new ObjectMapper();
             Post post = objectMapper.readValue(postStr, Post.class);
 
-            // 게시물 생성
-            Post createdPost = postService.createPost(post);
+            // 작성자명과 비밀번호로 회원 여부 확인
+            if (post.getAuthor() != null && post.getPassword() != null) {
+                // 비회원인 경우
+                // 비밀번호를 설정하고 userId를 null로 설정
+                post.setUserId("");
 
-            if (post.getContents() != null) {
-                // HTML 파싱
-                Document document = Jsoup.parse(post.getContents());
+                // 게시물 생성
+                Post createdPost = postService.createPost(post);
 
-                // 이미지 처리 함수 호출
-                mediaProcessor.processMediaPost(document, createdPost);
+                if (post.getContents() != null) {
+                    // HTML 파싱 및 이미지 처리
+                    Document document = Jsoup.parse(post.getContents());
+                    mediaProcessor.processMediaPost(document, createdPost);
 
-                // 변경된 HTML을 다시 게시물에 설정
-                String updatedContent = document.outerHtml();
-                System.out.println(updatedContent + "ㅇㅇㅇ");
-                createdPost.setContents(updatedContent);
+                    // 변경된 HTML을 다시 게시물에 설정
+                    String updatedContent = document.outerHtml();
+                    createdPost.setContents(updatedContent);
+                    postService.updatePost(createdPost.getId(), createdPost);
+                }
 
-                postService.updatePost(createdPost.getId(), createdPost);
+                System.out.println("비회원 게시물 생성: ID " + createdPost.getId() + "의 게시물이 생성됨");
+                return ResponseEntity.ok(createdPost);
+            } else if (post.getUserId() != null) {
+                // 회원인 경우
+                // userId를 작성자로 설정하고 비밀번호를 null로 설정
+                post.setAuthor(userId);
+                post.setUserId(userId);
+                post.setPassword(null);
 
+                // 게시물 생성
+                Post createdPost = postService.createPost(post);
+
+                if (post.getContents() != null) {
+                    // HTML 파싱 및 이미지 처리
+                    Document document = Jsoup.parse(post.getContents());
+                    mediaProcessor.processMediaPost(document, createdPost);
+
+                    // 변경된 HTML을 다시 게시물에 설정
+                    String updatedContent = document.outerHtml();
+                    createdPost.setContents(updatedContent);
+                    postService.updatePost(createdPost.getId(), createdPost);
+                }
+
+                System.out.println("회원 게시물 생성: ID " + createdPost.getId() + "의 게시물이 생성됨");
+                return ResponseEntity.ok(createdPost);
+            } else {
+                // 비회원 및 회원이 아닌 경우에는 적절한 오류 응답을 반환
+                return ResponseEntity.badRequest().body("작성자명 또는 비밀번호가 누락되었습니다.");
             }
-            System.out.println("게시물 생성: ID " + createdPost.getId() + "의 게시물이 생성됨");
-            return ResponseEntity.ok(createdPost);
         } catch (Exception e) {
             System.err.println("게시물 생성 중 오류 발생: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 
     // 특정 ID의 게시물을 가져오는 엔드포인트

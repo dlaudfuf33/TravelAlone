@@ -146,6 +146,9 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 블랙리스트에 있습니다.");
             }
             Claims claims = tokenService.parseToken(jwtToken);
+            if(claims==null){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 블랙리스트에 있습니다.");
+            }
             String userid = (String) claims.get("sub");
 
             // 요청받은 ID와 토큰의 ID가 일치하는지 검증
@@ -178,11 +181,13 @@ public class UserController {
             System.out.println("이메일   "+updatedUserInfo.getEmail());
             if(updatedUserInfo.getEmail()!=null && updatedUserInfo.getEmail().equals("")){
             user.setEmail(updatedUserInfo.getEmail());
-            }
+            }else {System.out.println("Email==null 로 수정안함");}
 
             System.out.println("성별   " +updatedUserInfo.getGender());
             if(updatedUserInfo.getGender()!=null && updatedUserInfo.getGender().equals("")){
-                user.setGender(updatedUserInfo.getGender());}
+                user.setGender(updatedUserInfo.getGender());
+            }else {System.out.println("gender==null 로 수정안함");}
+
 
 //            System.out.println(updatedUserInfo.getDateOfBirth());
 //            user.setDateOfBirth(updatedUserInfo.getDateOfBirth());

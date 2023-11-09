@@ -116,7 +116,7 @@ public class RecommendationService {
     public double getLatestBaseScore() {
         return systemConfigRepository.findTopByOrderByModifiedDateDesc()
                 .map(SystemConfig::getBasescore)
-                .orElse(2.0);  // 기본값 설정. 적절한 값을 선택해야 합니다.
+                .orElse(0.5);  // 기본값 설정. 적절한 값을 선택해야 합니다.
     }
 
     /**
@@ -238,6 +238,7 @@ public class RecommendationService {
         // 평균 평점이 높은 여행지를 순서대로 추출
         Pageable topNPageable = PageRequest.of(0, topN);
         // 평균 평점이 높은 상위 N개의 여행지를 조회하여 반환합니다.
+        System.out.println("hRLPDW@@@@"+destinationRepository.findTopNDestinationsByAverageRating(topNPageable));
         return destinationRepository.findTopNDestinationsByAverageRating(topNPageable);
     }
 

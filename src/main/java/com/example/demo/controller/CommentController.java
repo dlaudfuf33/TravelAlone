@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 댓글 관련 API를 처리하는 컨트롤러입니다.
@@ -75,6 +76,30 @@ public class CommentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    /**
+     * 특정 게시물에 연결된 댓글을 조회하는 엔드포인트
+     *
+     * @param postId 게시물 ID
+     * @return 조회된 댓글 목록
+     */
+    @Operation(summary = "특정 게시물에 연결된 댓글을 조회합니다.")
+    @GetMapping("/posts/{postId}")
+    public ResponseEntity<List<Comment>> getCommentsByPostId(@PathVariable Long postId) {
+        try {
+            // postId를 사용하여 해당 게시물에 연결된 댓글 목록을 가져오는 로직을 구현
+            List<Comment> comments = commentService.getCommentsByPostId(postId);
+            System.out.println("## 댓글조회 ##" + comments);
+            if (!comments.isEmpty()) {
+                return ResponseEntity.ok(comments);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
 
     /**
