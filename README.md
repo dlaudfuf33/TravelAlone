@@ -30,174 +30,182 @@ LiveAlone 프로젝트
 
 
 
-## 구현 기능
+## 구현 기능 
 
-### 주요 기능
-1. **사용자 관리**
-   - 사용자 등록, 수정, 삭제, 조회 기능
-   - 관련 파일: `UserController.java`, `User.java`, `UserRepository.java`
-   - 예시 코드:
-     ```java
-     @PostMapping("/register")
-     public ResponseEntity<User> registerUser(@RequestBody User user) {
-         User createdUser = userService.createUser(user);
-         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-     }
-     ```
+- 회원가입, 로그인
+- 댓글 관리
+- 여행지 관리
+- 게시물 관리
+- 추천 관리
+- 역할 관리
+- 파일 업로드 관리
+- 사용자 활동 관리
+  
 
-2. **댓글 관리**
-   - 댓글 작성, 수정, 삭제, 조회 기능
-   - 관련 파일: `CommentController.java`, `Comment.java`, `CommentRepository.java`
-   - 예시 코드:
-     ```java
-     @PostMapping
-     public ResponseEntity<Comment> createComment(@RequestBody Comment comment) {
-         Comment createdComment = commentService.createComment(comment);
-         return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
-     }
-     ```
+## 관련 파일 및 클래스
 
-3. **여행지 관리**
-   - 여행지 생성, 수정, 삭제, 조회 기능
-   - 관련 파일: `DestinationController.java`, `Destination.java`, `DestinationRepository.java`
-   - 예시 코드:
-     ```java
-     @PostMapping
-     public ResponseEntity<Destination> createDestination(@RequestBody Destination destination) {
-         Destination createdDestination = destinationService.createDestination(destination);
-         return new ResponseEntity<>(createdDestination, HttpStatus.CREATED);
-     }
-     ```
+#### 회원가입, 로그인
+- `UserController.java`: 사용자 회원가입 및 로그인 관리
 
-4. **게시물 관리**
-   - 게시물 작성, 수정, 삭제, 조회 기능
-   - 관련 파일: `PostController.java`, `Post.java`, `PostRepository.java`
-   - 예시 코드:
-     ```java
-     @PostMapping
-     public ResponseEntity<Post> createPost(@RequestBody Post post) {
-         Post createdPost = postService.createPost(post);
-         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
-     }
-     ```
+### [댓글 관리]
 
-5. **역할 관리**
-   - 역할 생성, 수정, 삭제, 조회 기능
-   - 관련 파일: `RoleController.java`, `Role.java`, `RoleRepository.java`
-   - 예시 코드:
-     ```java
-     @PostMapping
-     public ResponseEntity<Role> createRole(@RequestBody Role role) {
-         Role createdRole = roleService.createRole(role);
-         return new ResponseEntity<>(createdRole, HttpStatus.CREATED);
-     }
-     ```
+- `CommentController.java`: 댓글 작성, 수정, 삭제, 조회 관리
 
-6. **여행지 활동 관리**
-   - 사용자 여행지 활동 기록 및 조회 기능
-   - 관련 파일: `UserDestinationActivityController.java`, `UserDestinationActivity.java`, `UserDestinationActivityRepository.java`
-   - 예시 코드:
-     ```java
-     @PostMapping
-     public ResponseEntity<UserDestinationActivity> logActivity(@RequestBody UserDestinationActivity activity) {
-         UserDestinationActivity loggedActivity = activityService.logActivity(activity);
-         return new ResponseEntity<>(loggedActivity, HttpStatus.CREATED);
-     }
-     ```
+### [여행지 관리]
 
-7. **사용자 여행지 관리**
-   - 사용자가 관심 있는 여행지 추가, 수정, 삭제, 조회 기능
-   - 관련 파일: `UserDestinationController.java`, `UserDestination.java`, `UserDestinationRepository.java`
-   - 예시 코드:
-     ```java
-     @PostMapping
-     public ResponseEntity<UserDestination> addUserDestination(@RequestBody UserDestination userDestination) {
-         UserDestination addedDestination = userDestinationService.addUserDestination(userDestination);
-         return new ResponseEntity<>(addedDestination, HttpStatus.CREATED);
-     }
-     ```
+- `DestinationController.java`: 여행지 생성, 수정, 삭제, 조회 관리
 
-### 추가 기능
-1. **Swagger 설정**
-   - API 문서화를 위한 Swagger 설정
-   - 관련 파일: `SwaggerConfig.java`
-   - 예시 코드:
-     ```java
-     @Configuration
-     @EnableSwagger2
-     public class SwaggerConfig {
-         @Bean
-         public Docket api() {
-             return new Docket(DocumentationType.SWAGGER_2)
-                     .select()
-                     .apis(RequestHandlerSelectors.any())
-                     .paths(PathSelectors.any())
-                     .build();
-         }
-     }
-     ```
-1. **이용자 활동 데이터 수집**
-   - 사용자의 특정 여행지에서의 활동을 기록
-   - 관련 파일 및 클래스: `UserDestinationActivity.java`, `UserDestinationActivityRepository.java`, `UserDestinationActivityController.java`
+### [게시물 관리]
 
-**UserDestinationActivity.java**
-이 클래스는 사용자의 특정 여행지에서의 활동을 기록하는 엔티티입니다.
-```java
-@Entity
-public class UserDestinationActivity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long userId;
-    private Long destinationId;
-    private String activityType;
-    private LocalDate activityDate;
-    
-    // Getters and setters
-}
-id: 고유 식별자
-userId: 사용자 ID
-destinationId: 여행지 ID
-activityType: 활동 유형 (예: 방문, 리뷰 작성 등)
-activityDate: 활동 날짜
-UserDestinationActivityRepository.java
-이 인터페이스는 UserDestinationActivity 엔티티의 데이터베이스 상호작용을 담당합니다.
+- `PostController.java`: 게시물 작성, 수정, 삭제, 조회 관리
 
-java
-코드 복사
-public interface UserDestinationActivityRepository extends JpaRepository<UserDestinationActivity, Long> {
-    List<UserDestinationActivity> findByUserId(Long userId);
-}
-findByUserId(Long userId): 특정 사용자 ID에 해당하는 활동 기록을 조회
-UserDestinationActivityController.java
-이 클래스는 사용자 활동 데이터를 관리하는 REST 컨트롤러입니다.
+### [추천 관리]
 
-java
-코드 복사
-@RestController
-@RequestMapping("/activities")
-public class UserDestinationActivityController {
-    
-    @Autowired
-    private UserDestinationActivityService activityService;
-    
-    @PostMapping
-    public ResponseEntity<UserDestinationActivity> logActivity(@RequestBody UserDestinationActivity activity) {
-        UserDestinationActivity loggedActivity = activityService.logActivity(activity);
-        return new ResponseEntity<>(loggedActivity, HttpStatus.CREATED);
-    }
-    
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDestinationActivity> getActivityById(@PathVariable Long id) {
-        UserDestinationActivity activity = activityService.getActivityById(id);
-        return new ResponseEntity<>(activity, HttpStatus.OK);
-    }
-}
-logActivity: 사용자의 활동을 기록
-getActivityById: 특정 활동 기록을 조회
-     
+- `RecommendationController.java`: 추천 기능 관련 관리
+
+### [역할 관리]
+
+- `RoleController.java`: 역할 생성, 수정, 삭제, 조회 관리
+
+### [파일 업로드 관리]
+
+- `S3Controller.java`: 파일 업로드, 삭제, 조회 관리
+
+### [사용자 활동 관리]
+
+- `UserDestinationActivityController.java`: 사용자 활동 데이터 관리
+- `UserDestinationController.java`: 사용자 여행지 관리
+
+## 데이터 흐름 요약
+
+### 회원가입, 로그인
+1. 사용자는 이메일과 비밀번호를 이용해 회원가입 및 로그인을 할 수 있습니다.
 
 
+### 댓글 관리
+1. 사용자는 댓글을 작성, 수정, 삭제할 수 있습니다.
+2. 댓글의 상세 내용을 조회할 수 있습니다.
+
+### 여행지 관리
+1. 관리자는 여행지를 등록, 수정, 삭제할 수 있습니다.
+2. 모든 여행지 목록을 조회할 수 있으며, 특정 여행지의 상세 정보도 조회할 수 있습니다.
+
+### 게시물 관리
+1. 사용자는 게시물을 작성, 수정, 삭제할 수 있습니다.
+2. 게시물의 상세 내용을 조회할 수 있습니다.
+3. 사용자는 댓글을 작성, 수정, 삭제할 수 있습니다.
+
+### 추천 관리
+1. 사용자는 추천 여행지 목록을 조회할 수 있습니다.
+2. 추천 기능은 사용자의 활동 데이터를 기반으로 작동합니다.
+
+### 역할 관리
+1. 관리자는 새로운 역할을 생성, 수정, 삭제할 수 있습니다.
+2. 역할 목록을 조회할 수 있으며, 특정 역할의 상세 정보도 조회할 수 있습니다.
+
+### 파일 업로드 관리
+1. 사용자는 파일을 업로드하고, 업로드된 파일을 조회하거나 삭제할 수 있습니다.
+2. AWS S3를 사용하여 파일 관리를 수행합니다.
+
+### 사용자 활동 관리
+1. 사용자의 여행지페이지에서의 활동을 수집할 수 있습니다.
+2. 수집된 활동 데이터를 기반으로 개인화된 추천이 제공됩니다.
+
+API 
+
+### Comment API
+댓글을 생성, 조회, 수정, 삭제하는 API
+
+| Method | URL                            | Description               |
+|--------|--------------------------------|---------------------------|
+| PUT    | /api/comments/update/{id}      | 특정 ID의 댓글을 수정     |
+| POST   | /api/comments/create           | 새로운 댓글 생성          |
+| GET    | /api/comments/read/{id}        | 특정 ID의 댓글 조회       |
+| GET    | /api/comments/posts/{postId}   | 특정 게시물에 연결된 댓글 조회 |
+| DELETE | /api/comments/delete/{id}      | 특정 ID의 댓글 삭제       |
+
+### Posts API
+게시물(Posts) 관련 API 엔드포인트
+
+| Method | URL                            | Description               |
+|--------|--------------------------------|---------------------------|
+| PUT    | /api/posts/update/{id}         | 특정 ID의 게시물을 수정   |
+| POST   | /api/posts/create              | 게시물 생성               |
+| GET    | /api/posts                     | 모든 게시물의 모든 데이터를 조회 |
+| GET    | /api/posts/view/{id}           | 특정 ID의 게시물 조회     |
+| DELETE | /api/posts/delete/{id}         | 특정 ID의 게시물을 삭제   |
+
+### User Destination Activity Controller
+사용자 활동 데이터 관리
+
+| Method | URL                            | Description               |
+|--------|--------------------------------|---------------------------|
+| GET    | /api/activities/{id}           | 특정 ID의 활동을 조회     |
+| PUT    | /api/activities/{id}           | 특정 ID의 활동을 수정     |
+| DELETE | /api/activities/{id}           | 특정 ID의 활동을 삭제     |
+| POST   | /api/activities/collect        | 활동 데이터 수집          |
+| GET    | /api/activities                | 활동 데이터 조회          |
+
+### User Destination Controller
+사용자 여행지 관리
+
+| Method | URL                            | Description               |
+|--------|--------------------------------|---------------------------|
+| POST   | /api/userDestinations/review   | 여행지 리뷰 생성          |
+| GET    | /api/userDestinations          | 모든 여행지 조회          |
+| GET    | /api/userDestinations/{id}     | 특정 ID의 여행지 조회     |
+| DELETE | /api/userDestinations/{id}     | 특정 ID의 여행지 삭제     |
+
+### S3 Controller
+파일 업로드 관리
+
+| Method | URL                            | Description               |
+|--------|--------------------------------|---------------------------|
+| POST   | /api/s3/upload                 | 파일 업로드               |
+
+### Role API
+역할(Role) 관련 API 엔드포인트
+
+| Method | URL                            | Description               |
+|--------|--------------------------------|---------------------------|
+| GET    | /api/roles                     | 모든 역할 조회            |
+| GET    | /api/roles/read/{roleName}     | 특정 역할 조회            |
+| DELETE | /api/roles/delete/{roleId}     | 특정 역할 삭제            |
+
+### Destinations API
+여행지(Destinations) 관련 API 엔드포인트
+
+| Method | URL                            | Description               |
+|--------|--------------------------------|---------------------------|
+| POST   | /api/destinations/update/{destinationId} | 여행지 정보 업데이트    |
+| POST   | /api/destinations/create      | 새로운 여행지 생성        |
+| GET    | /api/destinations              | 여행지 목록 조회          |
+| GET    | /api/destinations/view/{id}   | 특정 ID의 여행지 조회     |
+| GET    | /api/destinations/searchByAuthor/{authorName} | 특정 작성자명으로 여행지 조회 |
+| GET    | /api/destinations/recommend/popular | 인기 있는 여행지 추천  |
+| DELETE | /api/destinations/{id}        | 특정 ID의 여행지 삭제     |
+
+### Recommendations API
+추천(Recommendations) 관련 API 엔드포인트
+
+| Method | URL                            | Description               |
+|--------|--------------------------------|---------------------------|
+| GET    | /api/recommendations           | 모든 추천 목록 조회       |
+| GET    | /api/recommendations/{id}      | 특정 ID의 추천 조회       |
+| DELETE | /api/recommendations/{id}      | 특정 ID의 추천 삭제       |
+| GET    | /api/recommendations/foruser/{userId}/{count} | 사용자에게 여행지 개인추천 |
+
+### User API
+사용자(User) 관련 API 엔드포인트
+
+| Method | URL                            | Description               |
+|--------|--------------------------------|---------------------------|
+| PUT    | /api/users/update/{userId}     | 특정 ID의 사용자 업데이트 |
+| POST   | /api/users/signup              | 사용자 가입               |
+| POST   | /api/users/logout              | 사용자 로그아웃           |
+| POST   | /api/users/login               | 사용자 로그인             |
+| GET    | /api/users/userinfo            | 사용자 정보 조회           |
+| DELETE | /api/users/delete/{userId}     | 특정 ID의 사용자 삭제     |
 
 
 ## ERD :
