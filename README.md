@@ -1,10 +1,7 @@
-![image](https://github.com/dlaudfuf33/livealone/assets/100833610/efc9a037-799c-4e10-abaf-456c88babc92)# LiveAlone 프로젝트
+![스크린샷 2024-06-06 오후 7 56 54](https://github.com/dlaudfuf33/livealone/assets/100833610/65eb58cb-b521-40c5-b497-1839e1d812d6)
+LiveAlone 프로젝트
 
 여행에 대한 커뮤니티 웹 애플리케이션입니다.
-![스크린샷 2024-06-06 오후 7 58 11](https://github.com/dlaudfuf33/livealone/assets/100833610/adf17750-122e-4be6-8012-ad89c7e2b106)
-![스크린샷 2024-06-06 오후 7 57 22](https://github.com/dlaudfuf33/livealone/assets/100833610/7e50210b-156d-43a5-b06f-0bb2d82caaa6)
-![스크린샷 2024-06-06 오후 7 56 54](https://github.com/dlaudfuf33/livealone/assets/100833610/65eb58cb-b521-40c5-b497-1839e1d812d6)
-![스크린샷 2024-06-06 오후 7 58 21](https://github.com/dlaudfuf33/livealone/assets/100833610/7bc40ecb-d1ec-425d-857e-7e4e402314a9)
 
 ## 개요
 
@@ -18,12 +15,17 @@
 
 ## 사용 기술 및 개발 환경
 
-### 백엔드
-- **언어**: Java
-- **프레임워크**: Spring Boot
-- **데이터베이스**: MySQL
-- **ORM**: JPA (Java Persistence API)
-- **보안**: Spring Security
+### 기술스택
+<div align=center> 
+<img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=Java&logoColor=white"/>
+<img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white"/>
+<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white"/>
+<img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=Spring%20Boot&logoColor=white"/>
+<img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white"/>
+<img src="https://img.shields.io/badge/Amazon%20S3-569A31?style=for-the-badge&logo=Amazon%20S3&logoColor=white"/>
+<img src="https://img.shields.io/badge/JPA-6DB33F?style=for-the-badge&logo=Hibernate&logoColor=white"/>
+<img src="https://img.shields.io/badge/Security%20JWT-000000?style=for-the-badge&logo=JSON%20Web%20Tokens&logoColor=white"/>
+</div>
 
 ### 개발 도구
 - **빌드 도구**: Gradle
@@ -48,17 +50,8 @@ Flowchart :
 아키텍쳐 : 
 ![image](https://github.com/dlaudfuf33/livealone/assets/100833610/65460b82-2356-440f-8b55-dfb9688681db)
 
-      
-<div align=center> 
-<img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=Java&logoColor=white"/>
-<img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white"/>
-<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white"/>
-<img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=Spring%20Boot&logoColor=white"/>
-<img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white"/>
-<img src="https://img.shields.io/badge/Amazon%20S3-569A31?style=for-the-badge&logo=Amazon%20S3&logoColor=white"/>
-<img src="https://img.shields.io/badge/JPA-6DB33F?style=for-the-badge&logo=Hibernate&logoColor=white"/>
-<img src="https://img.shields.io/badge/Security%20JWT-000000?style=for-the-badge&logo=JSON%20Web%20Tokens&logoColor=white"/>
 
+![스크린샷 2024-06-06 오후 7 58 11](https://github.com/dlaudfuf33/livealone/assets/100833610/adf17750-122e-4be6-8012-ad89c7e2b106)
+![스크린샷 2024-06-06 오후 7 57 22](https://github.com/dlaudfuf33/livealone/assets/100833610/7e50210b-156d-43a5-b06f-0bb2d82caaa6)
 
-</div>
-
+![스크린샷 2024-06-06 오후 7 58 21](https://github.com/dlaudfuf33/livealone/assets/100833610/7bc40ecb-d1ec-425d-857e-7e4e402314a9)
