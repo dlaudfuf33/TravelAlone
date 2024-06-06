@@ -1,6 +1,10 @@
 ![image](https://github.com/dlaudfuf33/livealone/assets/100833610/efc9a037-799c-4e10-abaf-456c88babc92)# LiveAlone 프로젝트
 
 여행에 대한 커뮤니티 웹 애플리케이션입니다.
+![스크린샷 2024-06-06 오후 7 58 11](https://github.com/dlaudfuf33/livealone/assets/100833610/adf17750-122e-4be6-8012-ad89c7e2b106)
+![스크린샷 2024-06-06 오후 7 57 22](https://github.com/dlaudfuf33/livealone/assets/100833610/7e50210b-156d-43a5-b06f-0bb2d82caaa6)
+![스크린샷 2024-06-06 오후 7 56 54](https://github.com/dlaudfuf33/livealone/assets/100833610/65eb58cb-b521-40c5-b497-1839e1d812d6)
+![스크린샷 2024-06-06 오후 7 58 21](https://github.com/dlaudfuf33/livealone/assets/100833610/7bc40ecb-d1ec-425d-857e-7e4e402314a9)
 
 ## 개요
 
@@ -36,13 +40,13 @@
 - **프로필 관리**: 사용자는 자신의 프로필을 관리할 수 있습니다.
 
 
-## 산출물
+
 ERD :
 ![image](https://github.com/dlaudfuf33/livealone/assets/100833610/977990af-143e-4aec-bf0d-14e580d9eb95)
 Flowchart : 
 ![image](https://github.com/dlaudfuf33/livealone/assets/100833610/3d095940-d7db-4073-a715-d66b65dd2e96)
 아키텍쳐 : 
-![image](https://github.com/dlaudfuf33/livealone/assets/100833610/a3ebae27-3df7-4bff-985f-6b2bacfdee3f)
+![image](https://github.com/dlaudfuf33/livealone/assets/100833610/65460b82-2356-440f-8b55-dfb9688681db)
 
       
 <div align=center> 
