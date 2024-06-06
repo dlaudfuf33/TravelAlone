@@ -215,8 +215,3 @@ API
 ## 아키텍쳐 : 
 ![image](https://github.com/dlaudfuf33/livealone/assets/100833610/65460b82-2356-440f-8b55-dfb9688681db)
 
-
-![스크린샷 2024-06-06 오후 7 58 11](https://github.com/dlaudfuf33/livealone/assets/100833610/adf17750-122e-4be6-8012-ad89c7e2b106)
-![스크린샷 2024-06-06 오후 7 57 22](https://github.com/dlaudfuf33/livealone/assets/100833610/7e50210b-156d-43a5-b06f-0bb2d82caaa6)
-
-![스크린샷 2024-06-06 오후 7 58 21](https://github.com/dlaudfuf33/livealone/assets/100833610/7bc40ecb-d1ec-425d-857e-7e4e402314a9)
