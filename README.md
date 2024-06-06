@@ -33,11 +33,170 @@ LiveAlone 프로젝트
 ## 구현 기능
 
 ### 주요 기능
-1. **게시판 기능**: 사용자들이 여행 주제에 대해 글을 작성하고 댓글을 달 수 있습니다.
-3. **사용자 인증 및 권한 관리**: 회원가입, 로그인, 로그아웃 및 사용자 권한 관리를 포함한 인증 기능.
+1. **사용자 관리**
+   - 사용자 등록, 수정, 삭제, 조회 기능
+   - 관련 파일: `UserController.java`, `User.java`, `UserRepository.java`
+   - 예시 코드:
+     ```java
+     @PostMapping("/register")
+     public ResponseEntity<User> registerUser(@RequestBody User user) {
+         User createdUser = userService.createUser(user);
+         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+     }
+     ```
+
+2. **댓글 관리**
+   - 댓글 작성, 수정, 삭제, 조회 기능
+   - 관련 파일: `CommentController.java`, `Comment.java`, `CommentRepository.java`
+   - 예시 코드:
+     ```java
+     @PostMapping
+     public ResponseEntity<Comment> createComment(@RequestBody Comment comment) {
+         Comment createdComment = commentService.createComment(comment);
+         return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
+     }
+     ```
+
+3. **여행지 관리**
+   - 여행지 생성, 수정, 삭제, 조회 기능
+   - 관련 파일: `DestinationController.java`, `Destination.java`, `DestinationRepository.java`
+   - 예시 코드:
+     ```java
+     @PostMapping
+     public ResponseEntity<Destination> createDestination(@RequestBody Destination destination) {
+         Destination createdDestination = destinationService.createDestination(destination);
+         return new ResponseEntity<>(createdDestination, HttpStatus.CREATED);
+     }
+     ```
+
+4. **게시물 관리**
+   - 게시물 작성, 수정, 삭제, 조회 기능
+   - 관련 파일: `PostController.java`, `Post.java`, `PostRepository.java`
+   - 예시 코드:
+     ```java
+     @PostMapping
+     public ResponseEntity<Post> createPost(@RequestBody Post post) {
+         Post createdPost = postService.createPost(post);
+         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
+     }
+     ```
+
+5. **역할 관리**
+   - 역할 생성, 수정, 삭제, 조회 기능
+   - 관련 파일: `RoleController.java`, `Role.java`, `RoleRepository.java`
+   - 예시 코드:
+     ```java
+     @PostMapping
+     public ResponseEntity<Role> createRole(@RequestBody Role role) {
+         Role createdRole = roleService.createRole(role);
+         return new ResponseEntity<>(createdRole, HttpStatus.CREATED);
+     }
+     ```
+
+6. **여행지 활동 관리**
+   - 사용자 여행지 활동 기록 및 조회 기능
+   - 관련 파일: `UserDestinationActivityController.java`, `UserDestinationActivity.java`, `UserDestinationActivityRepository.java`
+   - 예시 코드:
+     ```java
+     @PostMapping
+     public ResponseEntity<UserDestinationActivity> logActivity(@RequestBody UserDestinationActivity activity) {
+         UserDestinationActivity loggedActivity = activityService.logActivity(activity);
+         return new ResponseEntity<>(loggedActivity, HttpStatus.CREATED);
+     }
+     ```
+
+7. **사용자 여행지 관리**
+   - 사용자가 관심 있는 여행지 추가, 수정, 삭제, 조회 기능
+   - 관련 파일: `UserDestinationController.java`, `UserDestination.java`, `UserDestinationRepository.java`
+   - 예시 코드:
+     ```java
+     @PostMapping
+     public ResponseEntity<UserDestination> addUserDestination(@RequestBody UserDestination userDestination) {
+         UserDestination addedDestination = userDestinationService.addUserDestination(userDestination);
+         return new ResponseEntity<>(addedDestination, HttpStatus.CREATED);
+     }
+     ```
 
 ### 추가 기능
-- **프로필 관리**: 사용자는 자신의 프로필을 관리할 수 있습니다.
+1. **Swagger 설정**
+   - API 문서화를 위한 Swagger 설정
+   - 관련 파일: `SwaggerConfig.java`
+   - 예시 코드:
+     ```java
+     @Configuration
+     @EnableSwagger2
+     public class SwaggerConfig {
+         @Bean
+         public Docket api() {
+             return new Docket(DocumentationType.SWAGGER_2)
+                     .select()
+                     .apis(RequestHandlerSelectors.any())
+                     .paths(PathSelectors.any())
+                     .build();
+         }
+     }
+     ```
+1. **이용자 활동 데이터 수집**
+   - 사용자의 특정 여행지에서의 활동을 기록
+   - 관련 파일 및 클래스: `UserDestinationActivity.java`, `UserDestinationActivityRepository.java`, `UserDestinationActivityController.java`
+
+**UserDestinationActivity.java**
+이 클래스는 사용자의 특정 여행지에서의 활동을 기록하는 엔티티입니다.
+```java
+@Entity
+public class UserDestinationActivity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long userId;
+    private Long destinationId;
+    private String activityType;
+    private LocalDate activityDate;
+    
+    // Getters and setters
+}
+id: 고유 식별자
+userId: 사용자 ID
+destinationId: 여행지 ID
+activityType: 활동 유형 (예: 방문, 리뷰 작성 등)
+activityDate: 활동 날짜
+UserDestinationActivityRepository.java
+이 인터페이스는 UserDestinationActivity 엔티티의 데이터베이스 상호작용을 담당합니다.
+
+java
+코드 복사
+public interface UserDestinationActivityRepository extends JpaRepository<UserDestinationActivity, Long> {
+    List<UserDestinationActivity> findByUserId(Long userId);
+}
+findByUserId(Long userId): 특정 사용자 ID에 해당하는 활동 기록을 조회
+UserDestinationActivityController.java
+이 클래스는 사용자 활동 데이터를 관리하는 REST 컨트롤러입니다.
+
+java
+코드 복사
+@RestController
+@RequestMapping("/activities")
+public class UserDestinationActivityController {
+    
+    @Autowired
+    private UserDestinationActivityService activityService;
+    
+    @PostMapping
+    public ResponseEntity<UserDestinationActivity> logActivity(@RequestBody UserDestinationActivity activity) {
+        UserDestinationActivity loggedActivity = activityService.logActivity(activity);
+        return new ResponseEntity<>(loggedActivity, HttpStatus.CREATED);
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDestinationActivity> getActivityById(@PathVariable Long id) {
+        UserDestinationActivity activity = activityService.getActivityById(id);
+        return new ResponseEntity<>(activity, HttpStatus.OK);
+    }
+}
+logActivity: 사용자의 활동을 기록
+getActivityById: 특정 활동 기록을 조회
+     
+
 
 
 
