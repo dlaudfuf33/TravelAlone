@@ -1,4 +1,5 @@
 ![스크린샷 2024-06-06 오후 7 56 54](https://github.com/dlaudfuf33/livealone/assets/100833610/65eb58cb-b521-40c5-b497-1839e1d812d6)
+
 LiveAlone 프로젝트
 
 여행에 대한 커뮤니티 웹 애플리케이션입니다.
@@ -24,13 +25,12 @@ LiveAlone 프로젝트
 <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white"/>
 <img src="https://img.shields.io/badge/Amazon%20S3-569A31?style=for-the-badge&logo=Amazon%20S3&logoColor=white"/>
 <img src="https://img.shields.io/badge/JPA-6DB33F?style=for-the-badge&logo=Hibernate&logoColor=white"/>
-<img src="https://img.shields.io/badge/Security%20JWT-000000?style=for-the-badge&logo=JSON%20Web%20Tokens&logoColor=white"/>
+<img src="https://img.shields.io/badge/SpringSecurity%20JWT-000000?style=for-the-badge&logo=JSON%20Web%20Tokens&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white"/>
+<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>
 </div>
 
-### 개발 도구
-- **빌드 도구**: Gradle
-- **패키지 매니저**: Yarn
-- **버전 관리**: Git
+
 
 ## 구현 기능
 
