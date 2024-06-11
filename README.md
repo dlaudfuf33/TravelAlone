@@ -112,7 +112,7 @@ LiveAlone 프로젝트
 1. 사용자의 여행지페이지에서의 활동을 수집할 수 있습니다.
 2. 수집된 활동 데이터를 기반으로 개인화된 추천이 제공됩니다.
 
-Swagger API 문서
+## Swagger API 문서
 ![스크린샷 2024-06-06 오후 8 56 47](https://github.com/dlaudfuf33/livealone/assets/100833610/a19ccf44-f6a5-47d9-a8c3-a5dafa919993)
 
 ### Role API
