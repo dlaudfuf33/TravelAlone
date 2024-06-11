@@ -218,18 +218,19 @@ LiveAlone 프로젝트
 ## 이미지 예시
 
 ### 메인화면
-![스크린샷 2024-06-06 오후 7 56 54](https://github.com/dlaudfuf33/livealone/assets/100833610/c2ac6623-e1f3-4468-81a8-d0ac3ffeb18f)
-
-
+<img src="https://github.com/dlaudfuf33/livealone/assets/100833610/c2ac6623-e1f3-4468-81a8-d0ac3ffeb18f" alt="메인화면" width="600"/>
 ### 자유게시판 글 등록
-![스크린샷 2024-06-06 오후 7 57 22](https://github.com/dlaudfuf33/livealone/assets/100833610/10a4b46d-9274-49a2-8e8c-5b76a4dcd487)
-
+<img src="https://github.com/dlaudfuf33/livealone/assets/100833610/10a4b46d-9274-49a2-8e8c-5b76a4dcd487" alt="자유게시판 글 등록" width="600"/>
 ### 여행지 목록
-![스크린샷 2024-06-06 오후 7 58 11](https://github.com/dlaudfuf33/livealone/assets/100833610/26276f8c-99f1-46ea-a795-2ff863e3639c)
-
-
+<img src="https://github.com/dlaudfuf33/livealone/assets/100833610/26276f8c-99f1-46ea-a795-2ff863e3639c" alt="여행지 목록" width="600"/>
 ### 여행지 상세조회
-![스크린샷 2024-06-06 오후 7 58 21](https://github.com/dlaudfuf33/livealone/assets/100833610/c140ec49-bee0-44e6-a5cc-94aec3a048cc)
+<img src="https://github.com/dlaudfuf33/livealone/assets/100833610/c140ec49-bee0-44e6-a5cc-94aec3a048cc" alt="여행지 상세조회" width="600"/>
+
+
+
+
+
+
 
 
 ## ERD :
