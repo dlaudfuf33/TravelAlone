@@ -1,4 +1,4 @@
-![스크린샷 2024-06-06 오후 7 56 54](https://github.com/dlaudfuf33/livealone/assets/100833610/65eb58cb-b521-40c5-b497-1839e1d812d6)
+![스크린샷 2024-06-06 오후 7 58 21](https://github.com/dlaudfuf33/livealone/assets/100833610/b2951b9b-a986-4f0f-bba1-5746d9ec1beb)![스크린샷 2024-06-06 오후 7 56 54](https://github.com/dlaudfuf33/livealone/assets/100833610/65eb58cb-b521-40c5-b497-1839e1d812d6)
 
 LiveAlone 프로젝트
 
@@ -214,6 +214,22 @@ LiveAlone 프로젝트
 | Method | URL                            | Description                      |
 |--------|--------------------------------|----------------------------------|
 | GET    | /api/test                     | 테스트 엔드포인트                 |
+
+## 이미지 예시
+
+### 메인화면
+![스크린샷 2024-06-06 오후 7 56 54](https://github.com/dlaudfuf33/livealone/assets/100833610/c2ac6623-e1f3-4468-81a8-d0ac3ffeb18f)
+
+
+### 자유게시판 글 등록
+![스크린샷 2024-06-06 오후 7 57 22](https://github.com/dlaudfuf33/livealone/assets/100833610/10a4b46d-9274-49a2-8e8c-5b76a4dcd487)
+
+### 여행지 목록
+![스크린샷 2024-06-06 오후 7 58 11](https://github.com/dlaudfuf33/livealone/assets/100833610/26276f8c-99f1-46ea-a795-2ff863e3639c)
+
+
+### 여행지 상세조회
+![스크린샷 2024-06-06 오후 7 58 21](https://github.com/dlaudfuf33/livealone/assets/100833610/c140ec49-bee0-44e6-a5cc-94aec3a048cc)
 
 
 ## ERD :
