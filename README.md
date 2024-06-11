@@ -1,4 +1,4 @@
-![스크린샷 2024-06-06 오후 7 58 21](https://github.com/dlaudfuf33/livealone/assets/100833610/b2951b9b-a986-4f0f-bba1-5746d9ec1beb)![스크린샷 2024-06-06 오후 7 56 54](https://github.com/dlaudfuf33/livealone/assets/100833610/65eb58cb-b521-40c5-b497-1839e1d812d6)
+![스크린샷 2024-06-06 오후 7 56 54](https://github.com/dlaudfuf33/livealone/assets/100833610/65eb58cb-b521-40c5-b497-1839e1d812d6)
 
 LiveAlone 프로젝트
 
