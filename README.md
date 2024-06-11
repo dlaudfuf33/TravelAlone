@@ -80,6 +80,7 @@ LiveAlone 프로젝트
 
 ### 회원가입, 로그인
 1. 사용자는 이메일과 비밀번호를 이용해 회원가입 및 로그인을 할 수 있습니다.
+2. 회원가입 시 입력된 비밀번호는 솔팅(salting)과 해싱(hassing)과정을 거쳐 안전하게 저장됩니다.
 
 
 ### 댓글 관리
@@ -111,101 +112,108 @@ LiveAlone 프로젝트
 1. 사용자의 여행지페이지에서의 활동을 수집할 수 있습니다.
 2. 수집된 활동 데이터를 기반으로 개인화된 추천이 제공됩니다.
 
-API 
-
-### Comment API
-댓글을 생성, 조회, 수정, 삭제하는 API
-
-| Method | URL                            | Description               |
-|--------|--------------------------------|---------------------------|
-| PUT    | /api/comments/update/{id}      | 특정 ID의 댓글을 수정     |
-| POST   | /api/comments/create           | 새로운 댓글 생성          |
-| GET    | /api/comments/read/{id}        | 특정 ID의 댓글 조회       |
-| GET    | /api/comments/posts/{postId}   | 특정 게시물에 연결된 댓글 조회 |
-| DELETE | /api/comments/delete/{id}      | 특정 ID의 댓글 삭제       |
-
-### Posts API
-게시물(Posts) 관련 API 엔드포인트
-
-| Method | URL                            | Description               |
-|--------|--------------------------------|---------------------------|
-| PUT    | /api/posts/update/{id}         | 특정 ID의 게시물을 수정   |
-| POST   | /api/posts/create              | 게시물 생성               |
-| GET    | /api/posts                     | 모든 게시물의 모든 데이터를 조회 |
-| GET    | /api/posts/view/{id}           | 특정 ID의 게시물 조회     |
-| DELETE | /api/posts/delete/{id}         | 특정 ID의 게시물을 삭제   |
-
-### User Destination Activity Controller
-사용자 활동 데이터 관리
-
-| Method | URL                            | Description               |
-|--------|--------------------------------|---------------------------|
-| GET    | /api/activities/{id}           | 특정 ID의 활동을 조회     |
-| PUT    | /api/activities/{id}           | 특정 ID의 활동을 수정     |
-| DELETE | /api/activities/{id}           | 특정 ID의 활동을 삭제     |
-| POST   | /api/activities/collect        | 활동 데이터 수집          |
-| GET    | /api/activities                | 활동 데이터 조회          |
-
-### User Destination Controller
-사용자 여행지 관리
-
-| Method | URL                            | Description               |
-|--------|--------------------------------|---------------------------|
-| POST   | /api/userDestinations/review   | 여행지 리뷰 생성          |
-| GET    | /api/userDestinations          | 모든 여행지 조회          |
-| GET    | /api/userDestinations/{id}     | 특정 ID의 여행지 조회     |
-| DELETE | /api/userDestinations/{id}     | 특정 ID의 여행지 삭제     |
-
-### S3 Controller
-파일 업로드 관리
-
-| Method | URL                            | Description               |
-|--------|--------------------------------|---------------------------|
-| POST   | /api/s3/upload                 | 파일 업로드               |
+Swagger API 문서
+![스크린샷 2024-06-06 오후 8 56 47](https://github.com/dlaudfuf33/livealone/assets/100833610/a19ccf44-f6a5-47d9-a8c3-a5dafa919993)
 
 ### Role API
 역할(Role) 관련 API 엔드포인트
 
 | Method | URL                            | Description               |
 |--------|--------------------------------|---------------------------|
-| GET    | /api/roles                     | 모든 역할 조회            |
-| GET    | /api/roles/read/{roleName}     | 특정 역할 조회            |
-| DELETE | /api/roles/delete/{roleId}     | 특정 역할 삭제            |
+| GET    | /api/roles                     | 모든 역할을 조회          |
+| GET    | /api/roles/read/{roleName}     | 특정 ID의 역할을 조회     |
+| DELETE | /api/roles/delete/{roleId}     | 특정 ID의 역할을 삭제     |
 
 ### Destinations API
 여행지(Destinations) 관련 API 엔드포인트
 
-| Method | URL                            | Description               |
-|--------|--------------------------------|---------------------------|
-| POST   | /api/destinations/update/{destinationId} | 여행지 정보 업데이트    |
-| POST   | /api/destinations/create      | 새로운 여행지 생성        |
-| GET    | /api/destinations              | 여행지 목록 조회          |
-| GET    | /api/destinations/view/{id}   | 특정 ID의 여행지 조회     |
+| Method | URL                                     | Description                      |
+|--------|-----------------------------------------|----------------------------------|
+| POST   | /api/destinations/update/{destinationId}| 여행지 정보 업데이트             |
+| POST   | /api/destinations/create                | 새로운 여행지 생성               |
+| GET    | /api/destinations                       | 모든 여행지 목록 조회            |
+| GET    | /api/destinations/view/{id}             | 특정 ID의 여행지 조회            |
 | GET    | /api/destinations/searchByAuthor/{authorName} | 특정 작성자명으로 여행지 조회 |
-| GET    | /api/destinations/recommend/popular | 인기 있는 여행지 추천  |
-| DELETE | /api/destinations/{id}        | 특정 ID의 여행지 삭제     |
+| GET    | /api/destinations/recommend/popular     | 인기 있는 (평점 높은 순) 여행지 추천 |
+| DELETE | /api/destinations/{id}                  | 특정 ID의 여행지 삭제            |
 
 ### Recommendations API
 추천(Recommendations) 관련 API 엔드포인트
 
-| Method | URL                            | Description               |
-|--------|--------------------------------|---------------------------|
-| GET    | /api/recommendations           | 모든 추천 목록 조회       |
-| GET    | /api/recommendations/{id}      | 특정 ID의 추천 조회       |
-| DELETE | /api/recommendations/{id}      | 특정 ID의 추천 삭제       |
-| GET    | /api/recommendations/foruser/{userId}/{count} | 사용자에게 여행지 개인추천 |
+| Method | URL                                     | Description                      |
+|--------|-----------------------------------------|----------------------------------|
+| GET    | /api/recommendations                    | 모든 추천 목록 조회              |
+| GET    | /api/recommendations/{id}               | 특정 ID의 추천 조회              |
+| DELETE | /api/recommendations/{id}               | 특정 ID의 추천 삭제              |
+| GET    | /api/recommendations/foruser/{userId}/{count} | 사용자에게 여행지 개인추천  |
 
 ### User API
 사용자(User) 관련 API 엔드포인트
 
-| Method | URL                            | Description               |
-|--------|--------------------------------|---------------------------|
-| PUT    | /api/users/update/{userId}     | 특정 ID의 사용자 업데이트 |
-| POST   | /api/users/signup              | 사용자 가입               |
-| POST   | /api/users/logout              | 사용자 로그아웃           |
-| POST   | /api/users/login               | 사용자 로그인             |
-| GET    | /api/users/userinfo            | 사용자 정보 조회           |
-| DELETE | /api/users/delete/{userId}     | 특정 ID의 사용자 삭제     |
+| Method | URL                            | Description                      |
+|--------|--------------------------------|----------------------------------|
+| PUT    | /api/users/update/{userId}     | 특정 ID의 사용자 업데이트       |
+| POST   | /api/users/signup              | 사용자 가입                      |
+| POST   | /api/users/logout              | 사용자 로그아웃                  |
+| POST   | /api/users/login               | 사용자 로그인                    |
+| GET    | /api/users/userinfo            | 사용자 정보 조회                 |
+| DELETE | /api/users/delete/{userId}     | 특정 ID의 사용자 삭제            |
+
+### Comment API
+댓글을 생성, 조회, 수정, 삭제하는 API
+
+| Method | URL                            | Description                      |
+|--------|--------------------------------|----------------------------------|
+| PUT    | /api/comments/update/{id}      | 특정 ID의 댓글을 수정            |
+| POST   | /api/comments/create           | 새로운 댓글 생성                 |
+| GET    | /api/comments/read/{id}        | 특정 ID의 댓글 조회              |
+| GET    | /api/comments/posts/{postId}   | 특정 게시물에 연결된 댓글 조회   |
+| DELETE | /api/comments/delete/{id}      | 특정 ID의 댓글 삭제              |
+
+### Posts API
+게시물(Posts) 관련 API 엔드포인트
+
+| Method | URL                            | Description                      |
+|--------|--------------------------------|----------------------------------|
+| PUT    | /api/posts/update/{id}         | 특정 ID의 게시물을 수정          |
+| POST   | /api/posts/create              | 게시물 생성                      |
+| GET    | /api/posts                     | 모든 게시물의 모든 데이터를 조회 |
+| GET    | /api/posts/view/{id}           | 특정 ID의 게시물 조회            |
+| DELETE | /api/posts/delete/{id}         | 특정 ID의 게시물을 삭제          |
+
+### User Destination Activity Controller
+사용자 활동 데이터 관리
+
+| Method | URL                            | Description                      |
+|--------|--------------------------------|----------------------------------|
+| GET    | /api/activities/{id}           | 특정 ID의 활동을 조회            |
+| PUT    | /api/activities/{id}           | 특정 ID의 활동을 수정            |
+| DELETE | /api/activities/{id}           | 특정 ID의 활동을 삭제            |
+| POST   | /api/activities/collect        | 활동 데이터 수집                 |
+| GET    | /api/activities                | 활동 데이터 조회                 |
+
+### User Destination Controller
+사용자 여행지 관리
+
+| Method | URL                            | Description                      |
+|--------|--------------------------------|----------------------------------|
+| POST   | /api/userDestinations/review   | 여행지 리뷰 생성                 |
+| GET    | /api/userDestinations          | 모든 여행지 조회                 |
+| GET    | /api/userDestinations/{id}     | 특정 ID의 여행지 조회            |
+| DELETE | /api/userDestinations/{id}     | 특정 ID의 여행지 삭제            |
+
+### S3 Controller
+파일 업로드 관리
+
+| Method | URL                            | Description                      |
+|--------|--------------------------------|----------------------------------|
+| POST   | /api/s3/upload                 | 파일 업로드                      |
+
+### Test Controller
+
+| Method | URL                            | Description                      |
+|--------|--------------------------------|----------------------------------|
+| GET    | /api/test                     | 테스트 엔드포인트                 |
 
 
 ## ERD :
