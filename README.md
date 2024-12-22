@@ -1,6 +1,6 @@
 ![스크린샷 2024-06-06 오후 7 56 54](https://github.com/dlaudfuf33/livealone/assets/100833610/65eb58cb-b521-40c5-b497-1839e1d812d6)
 
-LiveAlone 프로젝트
+TravelAlone 프로젝트
 
 여행에 대한 커뮤니티 웹 애플리케이션입니다.
 
