@@ -234,11 +234,13 @@ TravelAlone 프로젝트
 
 
 
+## 아키텍쳐 
+![TA](https://github.com/user-attachments/assets/cc0aefdd-b97d-408c-b266-7d4d61af0418)
 
-## ERD :
+## ERD
 ![image](https://github.com/dlaudfuf33/livealone/assets/100833610/977990af-143e-4aec-bf0d-14e580d9eb95)
-## 플로우차트 : 
+
+## 플로우차트
 ![image](https://github.com/dlaudfuf33/livealone/assets/100833610/3d095940-d7db-4073-a715-d66b65dd2e96)
-## 아키텍쳐 : 
-![image](https://github.com/dlaudfuf33/livealone/assets/100833610/65460b82-2356-440f-8b55-dfb9688681db)
+
 
