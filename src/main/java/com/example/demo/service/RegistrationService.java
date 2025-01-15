@@ -3,18 +3,18 @@ package com.example.demo.service;
 import com.example.demo.entity.User;
 import com.example.demo.service.RoleService;
 import com.example.demo.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class RegistrationService {
-    @Autowired
-    private UserService userService;
 
-    @Autowired
-    private RoleService roleService;
+    private final UserService userService;
 
-    public User registerUser(String username, String password, String email, String roleName) {
+
+    public User registerUser(String username, String password, String email) {
         // 사용자 객체 생성
         User user = new User();
         user.setUserid(username);

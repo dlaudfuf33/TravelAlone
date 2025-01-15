@@ -4,6 +4,7 @@ import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,29 +16,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class RecommendationService {
     private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
 
-    @Autowired
-    private RecommendationRepository recommendationRepository;
-
-    @Autowired
-    private PreferenceWeightsRepository preferenceRepository;
-
-    @Autowired
-    private UserDestinationRepository userDestinationRepository;
-
-    @Autowired
-    private DestinationRepository destinationRepository;
-
-    @Autowired
-    private UserDestinationActivityRepository userDestinationActivityRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private SystemConfigRepository systemConfigRepository;
+    private final RecommendationRepository recommendationRepository;
+    private final PreferenceWeightsRepository preferenceRepository;
+    private final UserDestinationRepository userDestinationRepository;
+    private final DestinationRepository destinationRepository;
+    private final UserDestinationActivityRepository userDestinationActivityRepository;
+    private final UserRepository userRepository;
+    private final SystemConfigRepository systemConfigRepository;
 
 
     public List<Destination> recommendDestinationsForUser(String userId, int count) {
@@ -106,7 +95,6 @@ public class RecommendationService {
     }
 
 
-
     private boolean isUserProfileWeak(Map<Destination, Double> recommendationScores) {
         // 사용자 프로필의 강도를 판단하는 로직 (예: 추천 점수의 평균이 특정 임계값보다 낮은 경우)
         double averageScore = recommendationScores.values().stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
@@ -140,7 +128,7 @@ public class RecommendationService {
     /**
      * 사용자의 선호도 가중치를 적용하여 사용자 프로필의 점수를 수정합니다.
      *
-     * @param userId     사용자 ID
+     * @param userId      사용자 ID
      * @param userProfile 사용자 프로필 맵
      * @return 수정된 사용자 프로필 맵
      */
@@ -238,7 +226,7 @@ public class RecommendationService {
         // 평균 평점이 높은 여행지를 순서대로 추출
         Pageable topNPageable = PageRequest.of(0, topN);
         // 평균 평점이 높은 상위 N개의 여행지를 조회하여 반환합니다.
-        System.out.println("hRLPDW@@@@"+destinationRepository.findTopNDestinationsByAverageRating(topNPageable));
+        System.out.println("hRLPDW@@@@" + destinationRepository.findTopNDestinationsByAverageRating(topNPageable));
         return destinationRepository.findTopNDestinationsByAverageRating(topNPageable);
     }
 
@@ -293,6 +281,7 @@ public class RecommendationService {
         // 2. 여행지 정보에서 특성을 List<String> 형태로 바로 반환합니다.
         return destination.getFeatures();
     }
+
     /**
      * 주어진 특성 목록과 일치하는 여행지를 검색하여 반환합니다.
      *

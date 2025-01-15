@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.entity.Destination;
 import com.example.demo.entity.Recommendation;
 import com.example.demo.service.RecommendationService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +19,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "RECOMMENDATIONS API", description = "추천(Recommendations) 관련 API 엔드포인트")
 @RestController
 @RequestMapping("/api/recommendations")
+@RequiredArgsConstructor
 public class RecommendationController {
     private static final Logger logger = LoggerFactory.getLogger(RecommendationController.class);
 
-    @Autowired
-    private RecommendationService recommendationService;
+
+    private final  RecommendationService recommendationService;
 
     /**
      * 모든 추천 목록을 가져오는 엔드포인트

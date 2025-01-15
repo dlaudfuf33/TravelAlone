@@ -2,27 +2,21 @@ package com.example.demo.service;
 
 import com.example.demo.entity.User;
 import com.example.demo.entity.UserDestination;
-import com.example.demo.repository.DestinationRepository;
 import com.example.demo.repository.UserDestinationRepository;
 import com.example.demo.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserDestinationRepository userDestinationRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserDestinationRepository userDestinationRepository;
 
 
     // 사용자 비밀번호를 해시화하여 저장하는 메서드
@@ -35,13 +29,11 @@ public class UserService {
     }
 
     public User registerUser(String userid, String password, String email) {
-        // 사용자 객체 생성
         User user = new User();
         user.setUserid(userid);
         user.setPassword(password);
         user.setEmail(email);
 
-        // 사용자 저장
         return saveUser(user);
     }
 
@@ -54,14 +46,11 @@ public class UserService {
     }
 
     public User updateUser(Long userId, User updatedUser) {
-        User existingUser = userRepository.findById(userId).orElse(null);
-        if (existingUser != null) {
-            // 업데이트 로직을 구현하고 저장
-            // 예를 들어, updatedUser의 필드들을 existingUser에 복사하고 저장
-            existingUser.setUserid(updatedUser.getUserid());
-            existingUser.setEmail(updatedUser.getEmail());
-            // ...
-            return userRepository.save(existingUser);
+        Optional<User> existingUser = userRepository.findById(userId);
+        if (existingUser.isPresent()) {
+            User foundUser = existingUser.get();
+            foundUser.setEmail(updatedUser.getEmail());
+            return userRepository.save(foundUser);
         } else {
             return null;
         }
@@ -78,13 +67,13 @@ public class UserService {
 
     /**
      * 사용자가 평가한 여행지와 평점을 반환합니다.
+     *
      * @param userId 사용자 ID
      * @return List<UserDestination> 사용자의 여행지 평가 목록
      */
     public List<UserDestination> getUserInteractions(Long userId) {
         return userDestinationRepository.findByUserId(userId);
     }
-
 
 
 }

@@ -11,6 +11,7 @@ import com.example.demo.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,20 +24,16 @@ import java.util.*;
 @RestController
 @Tag(name = "User API", description = "사용자(User) 관련 API 엔드포인트")
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private UserRepository userRepository;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private TokenService tokenService;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenService tokenService;
 
-    @Autowired
-    private BlacklistedTokenRepository blacklistedTokenRepository;
+    private final BlacklistedTokenRepository blacklistedTokenRepository;
 
 
     @GetMapping("/userinfo")
@@ -64,7 +61,6 @@ public class UserController {
                 Map<String, Object> response = new HashMap<>();
                 response.put("id", user.getId());
                 response.put("userid", user.getUserid());
-//                response.put("userPassword",user.getPassword());
                 response.put("userEmail", user.getEmail());
                 response.put("usergender", user.getGender());
                 response.put("userage", user.getAge());
@@ -188,10 +184,6 @@ public class UserController {
                 user.setGender(updatedUserInfo.getGender());
             }else {System.out.println("gender==null 로 수정안함");}
 
-
-//            System.out.println(updatedUserInfo.getDateOfBirth());
-//            user.setDateOfBirth(updatedUserInfo.getDateOfBirth());
-            // 필요하다면 user 객체에 대한 추가적인 setter 메서드 호출을 여기에 더 추가할 수 있습니다.
 
             User updatedUser = userService.updateUser(userId, user); // DB 업데이트
 

@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.Destination;
 import com.example.demo.repository.DestinationRepository;
 import com.example.demo.repository.UserDestinationRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -12,17 +13,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class DestinationService {
 
     private final DestinationRepository destinationRepository;
     private final UserDestinationRepository userDestinationRepository;
 
-    // 생성자를 통한 의존성 주입
-    @Autowired
-    public DestinationService(DestinationRepository destinationRepository, UserDestinationRepository userDestinationRepository) {
-        this.destinationRepository = destinationRepository;
-        this.userDestinationRepository = userDestinationRepository;
-    }
 
     // 모든 여행지 정보를 반환
     public List<Destination> getAllDestinations() {

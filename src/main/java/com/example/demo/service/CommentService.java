@@ -4,6 +4,7 @@ import com.example.demo.entity.Comment;
 import com.example.demo.entity.Post;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +15,10 @@ import java.util.List;
  * 댓글 비즈니스 로직을 처리하는 서비스 클래스입니다.
  */
 @Service
+@RequiredArgsConstructor
 public class CommentService {
-
-    @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
-    private PostRepository postRepository;
+    private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
 
     /**
      * 모든 댓글 목록을 가져옵니다.
@@ -39,12 +38,6 @@ public class CommentService {
     public Comment createComment(Comment comment) {
         return commentRepository.save(comment);
     }
-
-//    public Comment createCommentForPost(Long postId, Comment comment) {
-//        Post post = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("Post not found"));
-//        comment.setPost(post);
-//        return commentRepository.save(comment);
-//    }
 
 
     /**

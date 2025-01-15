@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.entity.Comment;
 import com.example.demo.service.CommentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +21,11 @@ import java.util.stream.Collectors;
 @Tag(name = "Comment API", description = "댓글을 생성, 조회, 수정, 삭제하는 API")
 @RestController
 @RequestMapping("/api/comments")
+@RequiredArgsConstructor
 public class CommentController {
 
-    @Autowired
-    private CommentService commentService;
+
+    private final  CommentService commentService;
 
     /**
      * 모든 댓글 목록을 가져오는 엔드포인트

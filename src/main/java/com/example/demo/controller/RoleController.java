@@ -1,6 +1,8 @@
 package com.example.demo.controller;// RoleController.java
+
 import com.example.demo.entity.Role;
 import com.example.demo.service.RoleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +14,12 @@ import java.util.List;
 @Tag(name = "Role API", description = "역할(Role) 관련 API 엔드포인트")
 @RestController
 @RequestMapping("/api/roles")
+@RequiredArgsConstructor
 public class RoleController {
 
-    @Autowired
-    private RoleService roleService;
+
+    private final RoleService roleService;
+
     @Operation(summary = "모든 역할을 조회합니다.")
     @GetMapping
     public List<Role> getAllRoles() {

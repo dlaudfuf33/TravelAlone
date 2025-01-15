@@ -8,25 +8,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+
 import java.util.List;
 
 //@CrossOrigin(origins = "http://localhost:3000")
 @Tag(name = "POSTS API", description = "게시판(Posts) 관련 API 엔드포인트")
 @RestController
 @RequestMapping("/api/posts")
+@RequiredArgsConstructor
 public class PostController {
-    @Autowired
-    private PostService postService;
-    @Autowired
-    private MediaProcessor mediaProcessor;
-    @Autowired
-    private TokenService tokenService;
+
+    private final PostService postService;
+
+    private final MediaProcessor mediaProcessor;
+
+    private final TokenService tokenService;
 
 
     // 모든 게시물 목록을 가져오는 엔드포인트
@@ -49,8 +52,8 @@ public class PostController {
     @PostMapping("/create")
     public ResponseEntity<?> createPost(@RequestHeader("Authorization") String token, @RequestPart("post") String postStr) {
         try {
-            String userId="";
-            if (token!=null) {
+            String userId = "";
+            if (token != null) {
                 // 토큰 검증
                 String jwtToken = token.substring(7); // "Bearer " 제거
                 if (tokenService.isTokenBlacklisted(jwtToken)) {
@@ -122,7 +125,6 @@ public class PostController {
     }
 
 
-
     // 특정 ID의 게시물을 가져오는 엔드포인트
     @Operation(summary = "특정 ID의 게시물을 가져옵니다.")
     @GetMapping("/view/{id}")
@@ -178,7 +180,6 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 
 
     // 특정 ID의 게시물을 삭제하는 엔드포인트

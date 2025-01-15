@@ -8,6 +8,7 @@ import com.example.demo.repository.UserDestinationRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.DestinationService;
 import com.example.demo.service.UserDestinationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,16 +18,16 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/userDestinations")
+@RequiredArgsConstructor
 public class UserDestinationController {
 
-    @Autowired
-    private UserDestinationService userDestinationService;
-    @Autowired
-    private DestinationService destinationService;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private DestinationRepository destinationRepository;
+
+    private final UserDestinationService userDestinationService;
+
+    private final DestinationService destinationService;
+
+    private final UserRepository userRepository;
+    private final DestinationRepository destinationRepository;
 
     // 모든 사용자 여행지 리뷰 목록을 가져오는 엔드포인트
     @GetMapping
@@ -37,8 +38,7 @@ public class UserDestinationController {
     // 특정 ID의 사용자 여행지 리뷰를 가져오는 엔드포인트
     @GetMapping("/{id}")
     public ResponseEntity<UserDestination> getUserDestinationById(@PathVariable Long id) {
-        Optional<UserDestination> userDestinationOptional =
-                userDestinationService.getUserDestinationById(id);
+        Optional<UserDestination> userDestinationOptional = userDestinationService.getUserDestinationById(id);
         if (userDestinationOptional.isPresent()) {
             return ResponseEntity.ok(userDestinationOptional.get());
         } else {
@@ -48,11 +48,7 @@ public class UserDestinationController {
 
 
     @PostMapping("/review")
-    public ResponseEntity<UserDestination> leaveReview(
-            @RequestParam String userId,
-            @RequestParam Long destinationId,
-            @RequestParam Double rating,
-            @RequestParam String review) {
+    public ResponseEntity<UserDestination> leaveReview(@RequestParam String userId, @RequestParam Long destinationId, @RequestParam Double rating, @RequestParam String review) {
 
         User user = userRepository.findByUserid(userId);
         Destination destination = destinationRepository.findDestinationById(destinationId);

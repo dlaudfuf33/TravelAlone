@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.PreferenceWeights;
 import com.example.demo.repository.PreferenceWeightsRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PreferenceService {
-    @Autowired
-    private PreferenceWeightsRepository preferenceRepository;
+
+    private final PreferenceWeightsRepository preferenceRepository;
 
     /**
      * 모든 선호도 가중치 목록을 반환합니다.

@@ -1,27 +1,24 @@
 package com.example.demo.service;
+
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
-    private String gender;
-    private int age;
+
+    private final UserRepository userRepository;
 
 
     @Override
@@ -38,7 +35,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private Collection<? extends GrantedAuthority> getAuthorities(User user) {
         // 사용자의 권한을 가져옵니다.
-        String userRole = user.getRole().getName().name(); // enum을 String으로 변환
+        String userRole = user.getRole().getName().name();
         Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userRole);
         return authorities;
     }

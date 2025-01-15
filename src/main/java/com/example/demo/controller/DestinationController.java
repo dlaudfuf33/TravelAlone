@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import antlr.Token;
 import com.example.demo.MediaProcessor;
 import com.example.demo.entity.CreateDestinationRequest;
 import com.example.demo.entity.Destination;
@@ -9,17 +8,16 @@ import com.example.demo.service.DestinationService;
 import com.example.demo.service.RecommendationService;
 import com.example.demo.service.TokenService;
 import io.jsonwebtoken.Claims;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.springframework.beans.factory.annotation.Autowired;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Arrays;
-
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,18 +26,19 @@ import java.util.stream.Collectors;
 @Tag(name = "DESTINATIONS API", description = "여행지(Destinations) 관련 API 엔드포인트")
 @RestController
 @RequestMapping("/api/destinations")
+@RequiredArgsConstructor
 public class DestinationController {
-    @Autowired
-    private DestinationService destinationService;
 
-    @Autowired
-    private RecommendationService recommendationService;
+    private final  DestinationService destinationService;
 
-    @Autowired
-    private MediaProcessor mediaProcessor;
 
-    @Autowired
-    private TokenService tokenService;
+    private final  RecommendationService recommendationService;
+
+
+    private final  MediaProcessor mediaProcessor;
+
+
+    private final  TokenService tokenService;
 
     // 모든 여행지 목록을 가져오는 엔드포인트
     @Operation(summary = "모든 여행지 목록 조회")

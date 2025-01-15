@@ -8,34 +8,36 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.TokenService;
 import com.example.demo.service.UserDestinationActivityService;
 import io.jsonwebtoken.Claims;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/activities")
+@RequiredArgsConstructor
 public class UserDestinationActivityController {
 
-    @Autowired
-    private UserDestinationActivityService activityService;
-    @Autowired
-    private TokenService tokenService;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private DestinationRepository destinationRepository;
 
+    private final UserDestinationActivityService activityService;
+
+    private final TokenService tokenService;
+
+    private final UserRepository userRepository;
+
+    private final DestinationRepository destinationRepository;
 
 
     // 사용자의 활동을 생성하는 엔드포인트
     @PostMapping("/collect")
-    public ResponseEntity<?> collectActivity(@RequestHeader("Authorization") String token,@RequestBody UserDestinationActivity activityData) {
-        System.out.println(activityData+"#######");
+    public ResponseEntity<?> collectActivity(@RequestHeader("Authorization") String token, @RequestBody UserDestinationActivity activityData) {
+        System.out.println(activityData + "#######");
         String jwtToken = token.substring(7); // "Bearer " 부분을 제거
 
-        Claims claims=tokenService.parseToken(jwtToken);
-        if(claims!=null) {
+        Claims claims = tokenService.parseToken(jwtToken);
+        if (claims != null) {
             String userid = (String) claims.get("sub");
 
             User user = userRepository.findByUserid(userid);
@@ -46,7 +48,7 @@ public class UserDestinationActivityController {
             }
             activityData.setUser(user);
             activityData.setDestination(destination);
-        }else{
+        } else {
             System.out.println("비회원");
         }
 

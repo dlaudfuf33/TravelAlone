@@ -2,16 +2,18 @@ package com.example.demo.service;
 
 import com.example.demo.entity.UserDestinationActivity;
 import com.example.demo.repository.UserDestinationActivityRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserDestinationActivityService {
 
-    @Autowired
-    private UserDestinationActivityRepository activityRepository;
+
+    private final UserDestinationActivityRepository activityRepository;
 
     public UserDestinationActivity saveActivity(UserDestinationActivity activity) {
         return activityRepository.save(activity);

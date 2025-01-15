@@ -8,6 +8,7 @@ import com.example.demo.service.RecommendationService;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +17,14 @@ import java.util.List;
 @Tag(name = "ADMIN API", description = "관리자 관련 API 엔드포인트")
 @RestController
 @RequestMapping("/admin/preferences")
+@RequiredArgsConstructor
 public class AdminController {
-    @Autowired
-    private RecommendationService recommendationService;
-    @Autowired
-    private SystemConfigRepository systemConfigRepository;
-    @Autowired
-    private UserService userService;
+
+    private final  RecommendationService recommendationService;
+
+    private final  SystemConfigRepository systemConfigRepository;
+
+    private final  UserService userService;
     @GetMapping
     @Operation(summary = "모든 사용자 조회")
     public List<User> getAllUsers() {
