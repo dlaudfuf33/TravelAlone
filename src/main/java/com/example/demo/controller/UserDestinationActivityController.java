@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.entity.Destination;
 import com.example.demo.entity.User;
 import com.example.demo.entity.UserDestinationActivity;
+import com.example.demo.exception.InvalidTokenException;
+import com.example.demo.exception.UnauthorizedException;
 import com.example.demo.repository.DestinationRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.TokenService;
@@ -25,37 +27,25 @@ public class UserDestinationActivityController {
 
     private final TokenService tokenService;
 
-    private final UserRepository userRepository;
-
     private final DestinationRepository destinationRepository;
 
 
-    // 사용자의 활동을 생성하는 엔드포인트
+    // 사용자의 활동을 기록하는 엔드포인트
     @PostMapping("/collect")
-    public ResponseEntity<?> collectActivity(@RequestHeader("Authorization") String token, @RequestBody UserDestinationActivity activityData) {
-        System.out.println(activityData + "#######");
-        String jwtToken = token.substring(7); // "Bearer " 부분을 제거
+    public void collectActivity(@RequestHeader("Authorization") String token, @RequestBody UserDestinationActivity activityData) {
+        String jwtToken = token.substring(7);
+        try {
+            Long userid = tokenService.getUserIdFromToken(jwtToken);
+            activityService.saveActivity(userid, activityData);
+        } catch (InvalidTokenException e) {
+            throw new UnauthorizedException("유효하지 않은 토큰입니다.");
+        }
 
         Claims claims = tokenService.parseToken(jwtToken);
         if (claims != null) {
             String userid = (String) claims.get("sub");
-
-            User user = userRepository.findByUserid(userid);
-            // 세션에서 가져온 사용자 정보를 activityData에 설정
-            Destination destination = destinationRepository.findById(activityData.getDestination().getId()).orElse(null);
-            if (destination == null) {
-                return ResponseEntity.badRequest().body("해당 여행지를 찾을 수 없습니다.");
-            }
-            activityData.setUser(user);
-            activityData.setDestination(destination);
-        } else {
-            System.out.println("비회원");
+            activityService.saveActivity(Long.valueOf(userid), activityData);
         }
-
-        // 활동 데이터 저장
-        UserDestinationActivity savedActivity = activityService.saveActivity(activityData);
-
-        return ResponseEntity.ok(savedActivity);
     }
 
     // 모든 사용자의 활동을 조회하는 엔드포인트

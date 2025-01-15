@@ -1,8 +1,6 @@
 package com.example.demo.entity;
 
 import javax.persistence.*;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_destinations_Action")
@@ -29,10 +27,8 @@ public class UserDestinationActivity {
     @Column(name = "scrolled")
     private Boolean scrolled = Boolean.FALSE;        // 스크롤 여부
 
-    // 기본 생성자
     public UserDestinationActivity() {}
 
-    // 생성자
     public UserDestinationActivity(User user, Destination destination, Long startTime, Long endTime, Boolean photoClicked,Boolean scrolled) {
         this.user = user;
         this.destination = destination;
@@ -42,7 +38,6 @@ public class UserDestinationActivity {
         this.scrolled = scrolled;
     }
 
-    // getters and setters
     public Long getId() {
         return id;
     }

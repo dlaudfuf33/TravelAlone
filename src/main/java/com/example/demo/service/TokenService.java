@@ -29,7 +29,11 @@ public class TokenService {
 
     private final BlacklistedTokenRepository blacklistedTokenRepository;
 
-
+    public Long getUserIdFromToken(String token) {
+        String jwtToken = token.substring(7);
+        Claims claims = parseToken(jwtToken);
+        return Long.valueOf((String) claims.get("sub"));
+    }
 
     // 인증 토큰을 생성하는 메서드
     public String generateAuthToken(String userid) {
@@ -52,7 +56,7 @@ public class TokenService {
                     .parseClaimsJws(jwtToken)
                     .getBody();
         } catch (Exception e) {
-            return null;
+            throw e;
         }
     }
 

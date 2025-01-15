@@ -1,12 +1,17 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Destination;
+import com.example.demo.entity.User;
 import com.example.demo.entity.UserDestinationActivity;
+import com.example.demo.repository.DestinationRepository;
 import com.example.demo.repository.UserDestinationActivityRepository;
+import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -14,9 +19,18 @@ public class UserDestinationActivityService {
 
 
     private final UserDestinationActivityRepository activityRepository;
+    private final UserRepository userRepository;
+    private final DestinationRepository destinationRepository;
 
-    public UserDestinationActivity saveActivity(UserDestinationActivity activity) {
-        return activityRepository.save(activity);
+    public UserDestinationActivity saveActivity(Long userId, UserDestinationActivity activityData) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("없는 회원 입니다."));
+        Destination destination = destinationRepository.findById(activityData.getDestination().getId())
+                .orElseThrow(() -> new NotFoundException("없는 여행지 입니다."));
+
+        activityData.setUser(user);
+        activityData.setDestination(destination);
+        return activityRepository.save(activityData);
     }
 
     public List<UserDestinationActivity> getAllActivities() {
